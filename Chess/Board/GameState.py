@@ -7,9 +7,10 @@ from Chess.Pieces.bishop import Bishop
 from Chess.Pieces.king import King
 from Chess.Pieces.knight import Knight
 from Chess.Pieces.pawn import Pawn
+from Chess.Pieces.piece import Piece
 from Chess.Pieces.queen import Queen
 from Chess.Pieces.rook import Rook
-from Chess.utils.move_handlers import process_algebraic_notation
+from Chess.utils.move_handlers import process_algebraic_notation, process_location
 
 
 def print_board(board):
@@ -26,11 +27,11 @@ def print_board(board):
 
 class GameState:
     def __init__(self):
-        self.board = [[None for _ in range(8)] for _ in range(8)]  # The board is a 2D array of 8x8 squares
+        self.board: list[list[Piece | None]] = [[None for _ in range(8)] for _ in range(8)]  # The board is a 2D array of 8x8 squares
         self.turn = "w"  # White makes the first move
         self.history = []  # Here we will store the history of moves
         self.game_over = False  # Game is still ongoing
-        self.pieces = []  # List of pieces
+        self.pieces: list[Piece] = []  # List of pieces
         self.check = {"w": False, "b": False}  # Are the kings in check?
         self.castling_rights = {"w": {"O-O": True, "O-O-O": True}, "b": {"O-O": True, "O-O-O": True}}  # Castling rights
 
@@ -144,7 +145,8 @@ class GameState:
                 # If the piece is a friendly piece, the move is illegal
                 raise IllegalMove("You can't capture your own piece!")
         # Castling rights
-        if (self.castling_rights[self.turn]["O-O"] or self.castling_rights[self.turn]["O-O-O"]) and (isinstance(piece, King) or isinstance(piece, Rook)):
+        if (self.castling_rights[self.turn]["O-O"] or self.castling_rights[self.turn]["O-O-O"]) and (
+                isinstance(piece, King) or isinstance(piece, Rook)):
             if isinstance(piece, King) and abs(end[1] - start[1]) == 1:
                 # Remove the castling rights if the king moves
                 self.castling_rights[self.turn]["O-O"] = False
@@ -158,15 +160,19 @@ class GameState:
                     self.castling_rights[self.turn]["O-O"] = False
 
             # Check if the move is a castling move
-            if isinstance(piece, King) and abs(end[1] - start[1]) == 2 and (self.castling_rights[self.turn]["O-O"] or self.castling_rights[self.turn]["O-O-O"]):
+            if isinstance(piece, King) and abs(end[1] - start[1]) == 2 and (
+                    self.castling_rights[self.turn]["O-O"] or self.castling_rights[self.turn]["O-O-O"]):
                 # Check if there are pieces between the king and the rook
-                if end[1] > 4 and self.board[end[0]][end[1] - 1] is not None and self.board[end[0]][end[1] - 2] is not None:
+                if end[1] > 4 and self.board[end[0]][end[1] - 1] is not None and self.board[end[0]][
+                    end[1] - 2] is not None:
                     raise IllegalMove("You can't castle through pieces!")
-                if end[1] < 4 and self.board[end[0]][end[1] + 1] is not None and self.board[end[0]][end[1] + 2] is not None:
+                if end[1] < 4 and self.board[end[0]][end[1] + 1] is not None and self.board[end[0]][
+                    end[1] + 2] is not None:
                     raise IllegalMove("You can't castle through pieces!")
                 # If there are no pieces between the king and the rook, check the castling rights
                 elif end not in king.get_king_legal_moves(self.board, self.pieces, self.castling_rights, self.history):
-                    raise IllegalMove(f'You don\'t have the right to castle {"king" if self.castling_rights[self.turn]["O-O"] else "queen"} side!')
+                    raise IllegalMove(
+                        f'You don\'t have the right to castle {"king" if self.castling_rights[self.turn]["O-O"] else "queen"} side!')
 
                 # If the king is not in check and there are no pieces between the king and the rook, castle
                 else:
@@ -183,7 +189,6 @@ class GameState:
                 # Remove the castling rights
                 self.castling_rights[self.turn]["O-O"] = False
                 self.castling_rights[self.turn]["O-O-O"] = False
-
 
         # Check if the move is an en passant capture
         if isinstance(piece, Pawn) and self.board[end[0]][end[1]] is None and end[1] != start[1]:
@@ -215,7 +220,9 @@ class GameState:
         initial_board, initial_pieces = self.board, self.pieces
         # Check if the king is in checkmate
         if king.is_in_check(self.board, self.pieces, self.history):
-            if king.get_king_legal_moves(self.board, self.pieces, {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}}, self.history) == []:
+            if king.get_king_legal_moves(self.board, self.pieces,
+                                         {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}},
+                                         self.history) == []:
                 # If the king has no legal moves, check if the checking piece can be captured or blocked
                 move_found = False
                 for i in self.pieces:
@@ -239,7 +246,9 @@ class GameState:
 
         # Check if the king is in stalemate
         else:
-            if king.get_king_legal_moves(self.board, self.pieces, {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}}, self.history) == []:
+            if king.get_king_legal_moves(self.board, self.pieces,
+                                         {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}},
+                                         self.history) == []:
                 # If the king has no legal moves, check if the checking piece can be captured or blocked
                 move_found = False
                 for i in self.pieces:
@@ -265,6 +274,16 @@ class GameState:
     def get_board(self):
         # Return the board
         return self.board
+
+    def get_legal_moves(self, start):
+        # Return the legal moves
+        start = process_location(start)
+        piece = self.board[start[0]][start[1]]
+        if piece is None:
+            raise IllegalMove("There is no piece at the start location!")
+
+        return piece.get_legal_moves(self.board, self.history)
+
 
 if __name__ == "__main__":
 

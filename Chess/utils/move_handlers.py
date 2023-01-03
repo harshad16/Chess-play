@@ -8,3 +8,9 @@ def process_algebraic_notation(algebraic_notation):
     end = (int(end[1]) - 1, ord(end[0]) - 97)
 
     return end, start
+
+
+def process_location(algebraic_notation):
+    start = algebraic_notation[:2]
+    start = (int(start[1]) - 1, ord(start[0]) - 97)
+    return start

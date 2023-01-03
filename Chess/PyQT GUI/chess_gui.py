@@ -100,9 +100,13 @@ class ChessGUI(QObject):
             if isinstance(source, QLabel):
                 if self.source is None:
                     self.source = source
+                    legal_moves = self.chess.get_legal_moves(source.accessibleDescription())
+                    self.highlight_legal_moves(legal_moves)
                 else:
+                    self.remove_pending_moves()
                     try:
                         self.chess.make_move(self.source.accessibleDescription() + source.accessibleDescription())
+
                     except IllegalMove as e:
                         print(e)
                     except WrongColor as e:
@@ -117,6 +121,7 @@ class ChessGUI(QObject):
                 # self.pieces.remove(source)
                 # source.deleteLater()
             elif self.source is not None:
+                self.remove_pending_moves()
                 try:
                     self.chess.make_move(self.source.accessibleDescription() + source.accessibleDescription())
                 except IllegalMove as e:
@@ -147,6 +152,27 @@ class ChessGUI(QObject):
 
             # Pass the move to the GameState object for processing
             self.chess.make_move(self.source_square, self.destination_square)
+
+    def highlight_legal_moves(self, legal_moves):
+        for move in legal_moves:
+            for i in range(self.grid_layout.count()):
+                cell = self.grid_layout.itemAt(i)
+                widget = cell.widget()
+                row = i // 8
+                col = i % 8
+
+                if (7 - row, col) == move:
+                    #widget.setStyleSheet(("background-color: #F0D9B5;" if (col + row) % 2 == 0 else "background-color: #B58863;") + "background-image: radial-gradient(10px circle at 10px 10px, rgb(0, 255, 0) 50%, transparent 50.2%); background-size: 20px 20px; background-position: center; background-repeat: no-repeat;")
+                    widget.setStyleSheet("background-color:" + ("#F0D9B5" if (col + row) % 2 == 0 else "#B58863") + "; background-image: url(../Resources/circle.png); background-position: center; background-repeat: no-repeat; background-size: 5px 5px; background-size: contain;")
+
+    def remove_pending_moves(self):
+        for i in range(self.grid_layout.count()):
+            square = self.grid_layout.itemAt(i).widget()
+            row = i // 8
+            col = i % 8
+            square.setStyleSheet("background-color: #F0D9B5" if (col + row) % 2 == 0
+                                 else "background-color: #B58863")
+
 
 if __name__ == "__main__":
     gui = ChessGUI()
