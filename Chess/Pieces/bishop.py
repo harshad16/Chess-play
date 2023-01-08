@@ -25,6 +25,6 @@ class Bishop(Piece):
         return legal_moves
 
     def get_value(self):
-        # TODO: Implement this method
+        # TODO: Implement a better evaluation function
         # Evaluate the value of the bishop based on its position and other factors
-        pass
+        return 3 # Hard coded value for now

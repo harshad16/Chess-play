@@ -40,17 +40,18 @@ class Pawn(Piece):
             last_move = (end, start)
             last_piece = board[end[0]][end[1]]
             if isinstance(last_piece, Pawn) and last_piece.color != self.color:
-                if (self.color == "b" and last_move[0][0] == 3 and last_move[1][0] == 1) or\
-                   (self.color == "w" and last_move[0][0] == 4 and last_move[1][0] == 6):
-                    if abs(last_move[1][0] - last_move[0][0]) == 2:
-                        if last_move[0][1] == self._position[1] - 1 or last_move[0][1] == self._position[1] + 1:
-                            legal_moves.append((last_move[1][0] - direction, last_move[1][1]))
+                # if ((self.color == "b" and last_move[0][0] == 3 and last_move[1][0] == 1) or\
+                #    (self.color == "w" and last_move[0][0] == 4 and last_move[1][0] == 6)) and\
+                #         self.position[0] == last_move[1][0]:
+                if abs(last_move[0][0] - last_move[1][0]) == 2 and self.position[0] == last_move[0][0] and \
+                        (self.position[1] + 1 == last_move[0][1] or self.position[1] - 1 == last_move[0][1]):
+                    legal_moves.append((last_move[1][0] - direction, last_move[1][1]))
         return legal_moves
 
     def get_value(self):
-        # TODO: Implement this method
+        # TODO: Implement a better evaluation function
         # Evaluate the value of the pawn based on its position and other factors
         # Pawns are worth 1 point, but their value increases as they move closer to the other side of the board
         # Or if the pawn is protected by a piece, its value increases, if the pawn is passed, its value increases
         # If the pawn is isolated, its value decreases, if the pawn is doubled, its value decreases, etc.
-        pass
+        return 1  # Hard coded value for now

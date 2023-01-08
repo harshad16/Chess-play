@@ -9,6 +9,7 @@ from Chess.Board.GameState import GameState, print_board
 from Chess.Exceptions.Checkmate import Checkmate
 from Chess.Exceptions.IllegalMoveException import IllegalMove
 from Chess.Exceptions.WrongColor import WrongColor
+from Chess.Pieces.king import King
 
 
 class ChessGUI(QObject):
@@ -52,8 +53,9 @@ class ChessGUI(QObject):
         self.pieces = []
         #self.chess.initialize_board_from_fen("r4rk1/1pq2pp1/p1n1p1b1/4P3/7Q/7R/PPP2PP1/2KR1B2 b - - 4 20")
         self.chess.initialize_board()
+        # Test castling
+        #self.chess.initialize_board_from_fen("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1")
         self.createPieces()
-        print(self.pieces)
 
         # print_board(self.chess.get_board())
         # print(self.board)
@@ -96,7 +98,7 @@ class ChessGUI(QObject):
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseButtonPress:  # from PyQt5.QtCore import QEvent
-            print(source.accessibleDescription())
+            # print(source.accessibleDescription())
             if isinstance(source, QLabel):
                 if self.source is None:
                     self.source = source
@@ -136,22 +138,6 @@ class ChessGUI(QObject):
             else:
                 self.source = None
         return super().eventFilter(source, event)
-
-    def label_clicked(self, label):
-        # Get the position of the clicked label from its accessibleDescription
-        position = label.accessibleDescription()
-
-        # If the source square has not been set, set it to the position of the clicked label
-        if self.source_square is None:
-            self.source_square = position
-        # If the source square has been set, set the destination square to the position of the clicked label
-        # and reset the source square
-        else:
-            self.destination_square = position
-            self.source_square = None
-
-            # Pass the move to the GameState object for processing
-            self.chess.make_move(self.source_square, self.destination_square)
 
     def highlight_legal_moves(self, legal_moves):
         for move in legal_moves:

@@ -105,3 +105,9 @@ class King(Piece):
                 if self._position in piece.get_legal_moves(board, move_history):
                     return True
         return False
+
+    def get_value(self):
+        # TODO: Implement a better evaluation function
+        # The king technically has no defined value, but it is required for algorithms that use piece values
+        # Evaluate the value of the king based on its position and other factors
+        return 1000 # Hard coded value for now

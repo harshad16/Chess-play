@@ -30,6 +30,6 @@ class Queen(Piece):
         pass
 
     def get_value(self):
-        # TODO: Implement this method
+        # TODO: Implement a better evaluation function
         # Evaluate the value of the queen based on its position and other factors
-        pass
+        return 9  # Hard coded value for now

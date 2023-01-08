@@ -14,3 +14,9 @@ def process_location(algebraic_notation):
     start = algebraic_notation[:2]
     start = (int(start[1]) - 1, ord(start[0]) - 97)
     return start
+
+
+def convert_to_algebraic_notation(position):
+    # Convert a position to algebraic notation
+    row, col = position
+    return chr(col + 97) + str(row + 1)

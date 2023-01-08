@@ -25,6 +25,6 @@ class Knight(Piece):
         pass
 
     def get_value(self):
-        # TODO: Implement this method
+        # TODO: Implement a better evaluation function
         # Evaluate the value of the knight based on its position and other factors
-        pass
+        return 3  # Hard coded value for now
