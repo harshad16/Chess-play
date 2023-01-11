@@ -104,6 +104,9 @@ class King(Piece):
             if not isinstance(piece, King):
                 if self._position in piece.get_legal_moves(board, move_history):
                     return True
+            else:
+                if self._position in piece.get_king_legal_moves(board, pieces, {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}}, move_history):
+                    return True
         return False
 
     def get_value(self):
