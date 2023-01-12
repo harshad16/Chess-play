@@ -41,7 +41,6 @@ class ChessGUI(QObject):
 
         for row in range(8):
             for col in range(8):
-                # QWidget.mousePressEvent = ChessSquare.mousePressEvent
                 square = QWidget(self.central_widget)
                 square.setAccessibleDescription(self.characters[col] + str(8 - row))
                 square.setStyleSheet("background-color: #F0D9B5" if (col + row) % 2 == 0
@@ -51,14 +50,9 @@ class ChessGUI(QObject):
 
         # Create the pieces
         self.pieces = []
-        #self.chess.initialize_board_from_fen("r4rk1/1pq2pp1/p1n1p1b1/4P3/7Q/7R/PPP2PP1/2KR1B2 b - - 4 20")
         self.chess.initialize_board()
-        # Test castling
-        #self.chess.initialize_board_from_fen("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1")
         self.createPieces()
 
-        # print_board(self.chess.get_board())
-        # print(self.board)
         # Set the central widget
         self.window.setCentralWidget(self.central_widget)
 
@@ -68,6 +62,7 @@ class ChessGUI(QObject):
         # Run the application
         sys.exit(self.app.exec_())
 
+    # ! This function is deprecated. And also it's quite cursed.
     # def unholyHandler(self, label, event):
     #     print('aaaaaaaaaaaaaa')
     #     if event.type() == QEvent.MouseButtonPress:
@@ -90,7 +85,7 @@ class ChessGUI(QObject):
                     self.pieces.append(piece)
         return
 
-    def recreatePieces(self):
+    def recreate_pieces(self):
         for piece in self.pieces:
             self.grid_layout.removeWidget(piece)
         self.pieces = []
@@ -116,7 +111,7 @@ class ChessGUI(QObject):
                     except Checkmate as e:
                         raise e
                     print_board(self.chess.get_board())
-                    self.recreatePieces()
+                    self.recreate_pieces()
                     # Clear the source square
                     self.source = None
                 # self.grid_layout.removeWidget(source)
@@ -133,13 +128,14 @@ class ChessGUI(QObject):
                 except Checkmate as e:
                     raise e
                 print_board(self.chess.get_board())
-                self.recreatePieces()
+                self.recreate_pieces()
                 self.source = None
             else:
                 self.source = None
         return super().eventFilter(source, event)
 
     def highlight_legal_moves(self, legal_moves):
+        """ Highlights the legal moves for the piece on the board """
         for move in legal_moves:
             for i in range(self.grid_layout.count()):
                 cell = self.grid_layout.itemAt(i)
@@ -152,6 +148,7 @@ class ChessGUI(QObject):
                     widget.setStyleSheet("background-color:" + ("#F0D9B5" if (col + row) % 2 == 0 else "#B58863") + "; background-image: url(../Resources/circle.png); background-position: center; background-repeat: no-repeat; background-size: 5px 5px; background-size: contain;")
 
     def remove_pending_moves(self):
+        """ Removes the highlighted squares """
         for i in range(self.grid_layout.count()):
             square = self.grid_layout.itemAt(i).widget()
             row = i // 8

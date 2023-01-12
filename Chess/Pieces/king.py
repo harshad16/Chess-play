@@ -57,10 +57,10 @@ class King(Piece):
         row, col = self._position
 
         # Check if the king can castle
-        if castling_rights[self.color]["O-O"]:
+        if castling_rights[self.color]["O-O"] and self.position == (row, 4):
             board_copy = deepcopy(board)
             # Check if the squares between the king and the rook are empty
-            if board[row][col + 1] is None and board[row][col + 2] is None:
+            if board[row][col + 1] is None and board[row][col + 2] is None and self.position == (row, 4):
                 # Check if the king doesn't pass through or end up in check
                 board_copy[row][col] = None
                 board_copy[row][col + 1] = self
@@ -74,7 +74,7 @@ class King(Piece):
                 board_copy[row][col + 2] = None
                 board_copy[row][col] = self
                 self._position = (row, col)
-        if castling_rights[self.color]["O-O-O"]:
+        if castling_rights[self.color]["O-O-O"] and self.position == (row, 4):
             board_copy = deepcopy(board)
             # Check if the squares between the king and the rook are empty
             if board[row][col - 1] is None and board[row][col - 2] is None:

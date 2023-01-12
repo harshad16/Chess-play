@@ -28,8 +28,8 @@ def print_board(board):
 
 class GameState:
     def __init__(self):
-        self.board: list[list[Piece | None]] = [[None for _ in range(8)] for _ in
-                                                range(8)]  # The board is a 2D array of 8x8 squares
+        self.board: list[list[Piece | None]] = \
+            [[None for _ in range(8)] for _ in range(8)]  # The board is a 2D array of 8x8 squares
         self.turn = "w"  # White makes the first move
         self.history = []  # Here we will store the history of moves
         self.game_over = False  # Game is still ongoing
@@ -37,10 +37,11 @@ class GameState:
         self.check = {"w": False, "b": False}  # Are the kings in check?
         self.castling_rights = {"w": {"O-O": True, "O-O-O": True}, "b": {"O-O": True, "O-O-O": True}}  # Castling rights
         self.result = None  # The result of the game
-        self.number_of_moves = 0  # The number of half-moves made
+        self.number_of_moves = 0  # The number of half-moves made since game start
+        self.half_moves = 0  # The number of half-moves since the last capture or pawn move
 
     def initialize_board(self):
-        # Initializing the board with the initial position
+        """ Initialize the board with the initial chess position """
         # Generate the white pieces
         self.pieces = [
             Rook("w", (0, 0)), Knight("w", (0, 1)), Bishop("w", (0, 2)), Queen("w", (0, 3)), King("w", (0, 4)),
@@ -65,7 +66,7 @@ class GameState:
             self.board[piece.position[0]][piece.position[1]] = piece
 
     def initialize_board_from_fen(self, FEN):
-        # Initialize the board from a FEN string
+        """ Initialize the board from a FEN string """
         pieces = {"r": Rook, "n": Knight, "b": Bishop, "q": Queen, "k": King, "p": Pawn}
         FEN = FEN.split(" ")
         fen = FEN[0].split("/")
@@ -97,6 +98,10 @@ class GameState:
         }
 
     def make_move(self, move):
+        """ Make a move on the board """
+        # Update the half-move counter
+        self.half_moves += 1
+
         # Make a copy of the board and the pieces
         initial_board = deepcopy(self.board)
         initial_pieces = deepcopy(self.pieces)
@@ -107,6 +112,8 @@ class GameState:
         # Get the piece at the start square
         piece: Piece | King = self.board[start[0]][start[1]]
         # Check if the piece is the correct color
+        if piece is None:
+            raise Exception(convert_to_algebraic_notation(start) + " is empty" + " " + convert_to_algebraic_notation(end))
         if piece.color != self.turn:
             raise WrongColor("That's not your piece!")
         # Check if the move is legal
@@ -149,6 +156,7 @@ class GameState:
             for pieces in self.pieces:
                 if pieces.position == captured_piece.position and pieces.type == captured_piece.type:
                     self.pieces.remove(pieces)
+            self.half_moves = 0
 
         # Castling rights
         if (self.castling_rights[self.turn]["O-O"] or self.castling_rights[self.turn]["O-O-O"]) and (
@@ -184,13 +192,19 @@ class GameState:
                 else:
                     # Move the rook
                     if end[1] == 6:
+                        if self.board[end[0]][7] is None:
+                            self.castling_rights[self.turn]["O-O"] = False
+                            raise IllegalMove("Something went wrong")
+                        self.board[end[0]][7].position = (end[0], 5)
                         self.board[end[0]][5] = self.board[end[0]][7]
                         self.board[end[0]][7] = None
-                        self.board[end[0]][5].position = (end[0], 5)
                     else:
+                        if self.board[end[0]][0] is None:
+                            self.castling_rights[self.turn]["O-O-O"] = False
+                            raise IllegalMove("Something went wrong")
+                        self.board[end[0]][0].position = (end[0], 3)
                         self.board[end[0]][3] = self.board[end[0]][0]
                         self.board[end[0]][0] = None
-                        self.board[end[0]][3].position = (end[0], 3)
 
                 # Remove the castling rights
                 self.castling_rights[self.turn]["O-O"] = False
@@ -205,7 +219,8 @@ class GameState:
         self.board[start[0]][start[1]] = None
         self.board[end[0]][end[1]] = piece
         piece.position = end
-
+        if isinstance(piece, Pawn):
+            self.half_moves = 0
         # Check if the king is in check after the move
         if king.is_in_check(self.board, self.pieces, self.history):
             self.rollback(initial_board, initial_pieces)
@@ -297,18 +312,17 @@ class GameState:
 
         # TODO: Check if the game is over due to threefold repetition
 
-
     def rollback(self, board, pieces):
+        """ Function to roll back the board and pieces to a previous state """
         self.board = board
         self.pieces = pieces
 
     def get_board(self):
-        # Return the board
+        """ Returns the board """
         return self.board
 
     def get_legal_moves(self, start):
-        # Return the legal moves for the piece at the start square
-        # start = process_location(start)
+        """ Returns the legal moves for the piece at the start square """
         piece: Piece | King = self.board[start[0]][start[1]]
         if piece is None:
             raise IllegalMove("There is no piece at the start location!")
@@ -316,7 +330,8 @@ class GameState:
             piece.get_king_legal_moves(self.board, self.pieces, self.castling_rights, self.history)
 
     def possible_moves(self):
-        # Return all the legal moves for the given color
+        """ Return all possible moves for the current player """
+        # TODO: Remove the moves that put the king in check
         moves = []
         for i in self.pieces:
             if i.color == self.turn:
@@ -331,29 +346,27 @@ class GameState:
         if moves:
             move = choice(moves)
             try:
-                # print(move)
                 self.make_move(move)
-                # print_board(self.get_board())
             except IllegalMove:
                 moves.remove(move)
                 self.play_random_move(moves)
 
     def get_value(self):
-        # Return the value of the board
-        white_value = 0
-        black_value = 0
+        """ Return the value of the board. Positive if white is winning, negative if black is winning """
+        value = 0
         for piece in self.pieces:
             if piece.color == "w":
-                white_value += piece.get_value()
+                value += piece.get_value()
             else:
-                black_value += piece.get_value()
-        return white_value - black_value
+                value -= piece.get_value()
+        return value
 
     def get_result(self):
+        """ Returns the result of the game """
         return self.result
 
     def is_insufficient_material(self):
-        """ The game should be over if there is no checkmating material """
+        """ Checks if there is enough material on the board to checkmate """
         # Check if there is a rook, queen or pawn
         for piece in self.pieces:
             if isinstance(piece, Rook) or isinstance(piece, Queen) or isinstance(piece, Pawn):
@@ -388,14 +401,59 @@ class GameState:
         # If there's enough material, the game is not over
         return False
 
+    def fen(self):
+        """ Returns a FEN representation of the board """
+        FEN = ""
+        for row in self.board:
+            empty_squares = 0
+            fen = ""
+            for piece in row:
+                if piece is None:
+                    empty_squares += 1
+                    continue
+                elif empty_squares != 0:
+                    fen += str(empty_squares)
+                if piece.color == "w":
+                    fen += piece.type
+                    empty_squares = 0
+                else:
+                    fen += piece.type.lower()
+                    empty_squares = 0
+            if empty_squares != 0:
+                fen += str(empty_squares)
+            FEN = fen + "/" + FEN
+        FEN = FEN[:-1] # Remove the last slash
+        FEN += " " + self.turn # Add the turn
+
+        # Castling rights
+        castling_rights = ""
+        if self.castling_rights["w"]["O-O"]:
+            castling_rights += "K"
+        if self.castling_rights["w"]["O-O-O"]:
+            castling_rights += "Q"
+        if self.castling_rights["b"]["O-O"]:
+            castling_rights += "k"
+        if self.castling_rights["b"]["O-O-O"]:
+            castling_rights += "q"
+        if not castling_rights:
+            castling_rights = "-"
+        FEN += " " + castling_rights
+        # TODO: En passant
+        FEN += " -"  # Placeholder, no en passant support
+
+        FEN += " " + str(self.half_moves) # Number of half moves since the last capture or pawn move
+        FEN += " " + str(self.number_of_moves // 2 + 1) # Number of full moves
+        return FEN
+
 if __name__ == "__main__":
 
     game = GameState()
     game.initialize_board()
-    board = game.get_board()
-    legal_moves = game.possible_moves()
-    for move in legal_moves:
-        print(move)
+    print(game.fen())
+    # board = game.get_board()
+    # legal_moves = game.possible_moves()
+    # for move in legal_moves:
+    #     print(move)
 
     # Queen's Pawn Opening
     #     game.make_move("d2d4")
@@ -433,11 +491,11 @@ if __name__ == "__main__":
     #     game.make_move("b4c3")
     #     print_board(board)
     #     game.make_move("b1c3")
-    print_board(board)
+    # print_board(board)
     # Knight stuff
     while True:
         try:
             game.make_move(input("The move:"))
-            print_board(board)
+            # print_board(board)
         except Exception as e:
             print(e)

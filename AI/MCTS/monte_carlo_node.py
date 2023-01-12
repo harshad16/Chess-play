@@ -18,9 +18,11 @@ class Node:
         self.beta = beta
 
     def not_fully_expanded(self) -> bool:
+        """ Check if the node has been fully expanded """
         return len(self.children) < len(self.state.possible_moves())
 
     def ucb1(self, exploration_constant: float) -> float:
+        """ Apply the UCT formula (Upper Confidence Bound applied to Trees) """
         if self.visits == 0:
             return float('inf')
         return self.wins / self.visits + exploration_constant * math.sqrt(math.log(self.parent.visits) / self.visits)
