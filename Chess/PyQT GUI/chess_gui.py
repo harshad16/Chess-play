@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QFrame
 from PyQt5.QtCore import QEvent
 
+from Chess.Board.ChessRepository import ChessRepository
 from Chess.Board.GameState import GameState, print_board
 from Chess.Exceptions.Checkmate import Checkmate
 from Chess.Exceptions.IllegalMoveException import IllegalMove
@@ -13,9 +14,9 @@ from Chess.Pieces.king import King
 
 
 class ChessGUI(QObject):
-    def __init__(self):
+    def __init__(self, chess_repository):
         super().__init__()
-        self.chess = GameState()
+        self.chess = GameState(chess_repository)
         self.app = QApplication(sys.argv)
         # Create the main window
         self.window = QMainWindow()
@@ -50,7 +51,6 @@ class ChessGUI(QObject):
 
         # Create the pieces
         self.pieces = []
-        self.chess.initialize_board()
         self.createPieces()
 
         # Set the central widget
@@ -70,7 +70,7 @@ class ChessGUI(QObject):
 
     def createPieces(self):
         # go over gamestate board and create pieces
-        for col in self.chess.get_board():
+        for col in self.chess.board.board:
             for element in col:
                 if element is not None:
                     piece = QLabel(self.central_widget)
@@ -103,7 +103,6 @@ class ChessGUI(QObject):
                     self.remove_pending_moves()
                     try:
                         self.chess.make_move(self.source.accessibleDescription() + source.accessibleDescription())
-
                     except IllegalMove as e:
                         print(e)
                     except WrongColor as e:
@@ -158,4 +157,6 @@ class ChessGUI(QObject):
 
 
 if __name__ == "__main__":
-    gui = ChessGUI()
+    chess_repository = ChessRepository()
+    chess_repository.initialize_board()
+    gui = ChessGUI(chess_repository)

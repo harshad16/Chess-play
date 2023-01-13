@@ -8,6 +8,7 @@ from datetime import time
 from AI.MCTS.Exceptions.LosingState import LosingState
 from AI.MCTS.hash_table import HashTable
 from AI.MCTS.monte_carlo_node import Node
+from Chess.Board.ChessRepository import ChessRepository
 from Chess.Board.GameState import GameState, print_board
 from Chess.Exceptions.Checkmate import Checkmate
 import time
@@ -23,6 +24,8 @@ class MCTS:
         self.depth_limit = depth_limit
         # TODO: Implement the opening book to provide stronger play and faster moves in the opening, when there are a lot of possible moves
         self.opening_book = {
+            # TODO: Create a stronger opening book
+            # TODO: Consider transpositions
             # 6 moves of exchange QGD
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1": "d2d4",
             "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2": "c2c4",
@@ -62,15 +65,15 @@ class MCTS:
 
     def _select(self, node: Node, depth: int) -> Node:
         """ Select the next node to explore using the UCB1 algorithm """
-        while not node.state.game_over:
+        while not node.state.board.game_over:
             if node.not_fully_expanded():
                 return node
-            if self.depth_limit and depth>= self.depth_limit:
+            if self.depth_limit and depth >= self.depth_limit:
                 return node
             hashtable_result = self.hashtable.lookup(node.state)
             if hashtable_result:
                 value, move = hashtable_result
-                if node.state.turn == "w":
+                if node.state.board.turn == "w":
                     if value >= node.beta:
                         return node
                 else:
@@ -88,7 +91,7 @@ class MCTS:
         """ Expand the selected node by creating new children """
         next_state = deepcopy(node.state)
         next_state.play_random_move()
-        new_node = Node(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.history[-1])
+        new_node = Node(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.board.history[-1])
         node.children.append(new_node)
         return new_node
 
@@ -96,11 +99,11 @@ class MCTS:
         """ Simulate the game to a terminal state and return the result """
         state = deepcopy(node.state)
         start = time.time()
-        while not state.game_over:
+        while not state.board.game_over:
             hashtable_result = self.hashtable.lookup(state)
             if hashtable_result:
                 value, move = hashtable_result
-                if state.turn == "w":
+                if state.board.turn == "w":
                     if value >= node.beta:
                         return -1
                     node.alpha = max(node.alpha, value)
@@ -115,10 +118,10 @@ class MCTS:
                     print(e)
                     end = time.time()
                     print(end - start)
-                    return state.result
+                    return state.board.result
         end = time.time()
         print(end - start)
-        return state.result
+        return state.board.result
 
     def _backpropagate(self, node: Node, result: int):
         """ Backpropagate the result of the simulation from the terminal node to the root node """
@@ -161,11 +164,12 @@ class MCTS:
 
 
 if __name__ == "__main__":
-    chess_state = GameState()
-    chess_state.initialize_board()
+    chess_repository = ChessRepository()
+    chess_repository.initialize_board()
+    chess_state = GameState(chess_repository)
     mcts = MCTS(chess_state, iterations=20)
 
-    while not chess_state.game_over:
+    while not chess_state.board.game_over:
         start = time.time()
         move = mcts.select_move()
         print(move)

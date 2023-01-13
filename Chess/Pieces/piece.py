@@ -1,11 +1,15 @@
+from abc import abstractmethod
+
+
 class Piece:
     def __init__(self, type, color, position):
         self.type: str = type
         self.color: str = color
         self._position: tuple[int, int] = position
 
-    def get_legal_moves(self, board, move_history):
-        # Generate a list of legal moves for the piece based on its movement patterns and the current board state
+    @abstractmethod
+    def get_legal_moves(self, *args):
+        """ Generate a list of legal moves for the piece based on its movement patterns and the current board state """
         pass
 
     def get_value(self):

@@ -7,6 +7,7 @@ class King(Piece):
     def __init__(self, color, position):
         super().__init__("K", color, position)
 
+    # Potentially useless?
     def can_move_to_square(self, board, position, enemy_pieces, move_history):
         row, col = position
         if not (0 <= row < 8 and 0 <= col < 8):
@@ -24,6 +25,8 @@ class King(Piece):
         board[self._position[0]][self._position[1]] = self
         self._position = (self._position[0], self._position[1])
         return True  # king can move to the square
+
+    # def get_legal_moves(self, board, move_history, castling_rights, pieces):
 
     def get_king_legal_moves(self, board, pieces, castling_rights, move_history):
         legal_moves = []
