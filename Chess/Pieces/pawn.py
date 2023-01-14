@@ -6,7 +6,7 @@ class Pawn(Piece):
     def __init__(self, color, position):
         super().__init__("P", color, position)
 
-    def get_legal_moves(self, board, move_history, castling_rights=None, pieces=None):
+    def get_legal_moves(self, board, move_history, pieces=None):
         # Generate a list of legal moves for the pawn based on its movement patterns and the current board state
 
         # Check the direction the pawn is moving in

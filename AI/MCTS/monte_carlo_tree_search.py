@@ -1,4 +1,6 @@
+import io
 import json
+import pstats
 import random
 import math
 from collections import deque
@@ -12,35 +14,33 @@ from Chess.Board.ChessRepository import ChessRepository
 from Chess.Board.GameState import GameState, print_board
 from Chess.Exceptions.Checkmate import Checkmate
 import time
-import numpy as np
+import cProfile
 
 class MCTS:
-    def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2), depth_limit=None):
+    def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2), depth_limit=None, use_opening_book=False):
         self.iterations = iterations
         self.exploration_constant = exploration_constant
         self.root = Node(state)
         self.hashtable = HashTable(1009)
         self.current_node = self.root
         self.depth_limit = depth_limit
+        self.use_opening_book = use_opening_book
         # TODO: Implement the opening book to provide stronger play and faster moves in the opening, when there are a lot of possible moves
         self.opening_book = {
             # TODO: Create a stronger opening book
-            # TODO: Consider transpositions
             # 6 moves of exchange QGD
-            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1": "d2d4",
-            "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2": "c2c4",
-            "rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3": "b1c3",
-            "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 2 4": "c4d5",
-            "rnbqkb1r/ppp2ppp/5n2/3p4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5": "c1g5",
-            "rnbqkb1r/pp3ppp/2p2n2/3p2B1/3P4/2N5/PP2PPPP/R2QKBNR w KQkq - 0 6": "e2e3",
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR": "d2d4",
+            "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR": "c2c4",
+            "rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR": "b1c3",
+            "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR": "c4d5",
+            "rnbqkb1r/ppp2ppp/5n2/3p4/3P4/2N5/PP2PPPP/R1BQKBNR": "c1g5",
+            "rnbqkb1r/pp3ppp/2p2n2/3p2B1/3P4/2N5/PP2PPPP/R2QKBNR": "e2e3",
 
             # 4 moves of the Catalan
-            "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2": "c2c4",
-            "rnbqkbnr/pppp1ppp/4p3/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2": "c2c4",  # Transposition
-            "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3": "g2g3",
-            "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 1 3": "g2g3",  # Transposition
-            "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/6P1/PP2PP1P/RNBQKBNR w KQkq - 1 4": "c1d2",
-            "rnbqk2r/ppppbppp/4pn2/8/2PP4/6P1/PP1BPP1P/RN1QKBNR w KQkq - 3 5": "g1d3"
+            "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR": "c2c4",
+            "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR": "g2g3",
+            "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/6P1/PP2PP1P/RNBQKBNR": "c1d2",
+            "rnbqk2r/ppppbppp/4pn2/8/2PP4/6P1/PP1BPP1P/RN1QKBNR": "g1d3"
         }
 
     def set_current_node(self, state: GameState):
@@ -132,9 +132,10 @@ class MCTS:
 
     def select_move(self):
         """ Perform the MCTS algorithm and select the best move """
-        fen = self.root.state.fen()
-        if fen in self.opening_book:
-            return self.opening_book[fen]
+        if self.use_opening_book:
+            fen = self.root.state.fen().split(" ")[0]
+            if fen in self.opening_book:
+                return self.opening_book[fen]
 
         for _ in range(self.iterations):
             node = self._select(self.current_node, 0)
@@ -167,13 +168,20 @@ if __name__ == "__main__":
     chess_repository = ChessRepository()
     chess_repository.initialize_board()
     chess_state = GameState(chess_repository)
-    mcts = MCTS(chess_state, iterations=20)
-
+    mcts = MCTS(chess_state, iterations=1)
+    start = time.time()
     while not chess_state.board.game_over:
-        start = time.time()
+        pr = cProfile.Profile()
+        pr.enable()
         move = mcts.select_move()
+        pr.disable()
+        s = io.StringIO()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print(s.getvalue())
         print(move)
-        print(f"\nTime taken on average/move: {(time.time() - start)/20}")
+        print(f"\nTime taken on average/game: {(time.time() - start)/20}")
         chess_state.make_move(move)
         # mcts.set_current_node(chess_state)
         print_board(chess_state.get_board())

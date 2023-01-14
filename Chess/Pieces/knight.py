@@ -5,7 +5,7 @@ class Knight(Piece):
     def __init__(self, color, position):
         super().__init__("N", color, position)
 
-    def get_legal_moves(self, board, move_history=None, castling_rights=None, pieces=None):
+    def get_legal_moves(self, board, move_history=None, pieces=None):
         # Generate a list of legal moves for the knight based on its movement patterns and the current board state
         legal_moves = []
 

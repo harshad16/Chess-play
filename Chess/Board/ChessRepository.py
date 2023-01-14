@@ -15,67 +15,44 @@ class ChessRepository:
         self.__history = []  # Here we will store the history of moves
         self.__game_over = False  # Game is still ongoing
         self.__pieces: list[Piece] = []  # List of __pieces
-        self.__castling_rights = {"w": {"O-O": True, "O-O-O": True}, "b": {"O-O": True, "O-O-O": True}}  # Castling rights
+        self.__castling_rights = {"w": {"O-O": True, "O-O-O": True},
+                                  "b": {"O-O": True, "O-O-O": True}}  # Castling rights
         self.__result = None  # The result of the game
         self.__number_of_moves = 0  # The number of half-moves made since game start
         self.__half_moves = 0  # The number of half-moves since the last capture or pawn move
 
-    def initialize_board(self, fen=None):
-        """ Initialize the __board with the FEN provided, or the initial chess position if no FEN is provided """
-        if fen is None:
-            # Generate the white __pieces
-            self.__pieces = [
-                Rook("w", (0, 0)), Knight("w", (0, 1)), Bishop("w", (0, 2)), Queen("w", (0, 3)), King("w", (0, 4)),
-                Bishop("w", (0, 5)), Knight("w", (0, 6)), Rook("w", (0, 7))
-            ]
-            for col in range(8):
-                self.__pieces.append(Pawn("w", (1, col)))
-
-            # Generate the black __pieces
-            self.__pieces.extend(
-                [Rook("b", (7, 0)), Knight("b", (7, 1)), Bishop("b", (7, 2)), Queen("b", (7, 3)), King("b", (7, 4)),
-                 Bishop("b", (7, 5)), Knight("b", (7, 6)), Rook("b", (7, 7))]
-            )
-            for col in range(8):
-                self.__pieces.append(Pawn("b", (6, col)))
-
-            # Put the __pieces on the __board
-            for piece in self.__pieces:
-                self.__board[piece.position[0]][piece.position[1]] = piece
-
-            for piece in self.__pieces:
-                self.__board[piece.position[0]][piece.position[1]] = piece
-        else:
-            __pieces = {"r": Rook, "n": Knight, "b": Bishop, "q": Queen, "k": King, "p": Pawn}
-            fen = fen.split(" ")
-            fen_pieces = fen[0].split("/")
-            fen_pieces.reverse()
-            pos = (0, 0)
-            for row in fen_pieces:
-                for char in row:
-                    if char.isdigit():
-                        for _ in range(int(char)):
-                            self.__board[pos[0]][pos[1]] = None
-                            pos = (pos[0], pos[1] + 1)
-                    if char.lower() in __pieces:
-                        if char.islower():
-                            piece = __pieces[char]("b", pos)
-                            self.__pieces.append(piece)
-                            self.__board[pos[0]][pos[1]] = piece
-                        else:
-                            piece = __pieces[char.lower()]("w", pos)
-                            self.__pieces.append(piece)
-                            self.__board[pos[0]][pos[1]] = piece
+    def initialize_board(self, fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"):
+        """ Initialize the board with the FEN provided, or the initial chess position if no FEN is provided """
+        pieces = {"r": Rook, "n": Knight, "b": Bishop, "q": Queen, "k": King, "p": Pawn}
+        fen = fen.split(" ")
+        fen_pieces = fen[0].split("/")
+        fen_pieces.reverse()
+        pos = (0, 0)
+        for row in fen_pieces:
+            for char in row:
+                if char.isdigit():
+                    for _ in range(int(char)):
+                        self.__board[pos[0]][pos[1]] = None
                         pos = (pos[0], pos[1] + 1)
-                pos = (pos[0] + 1, 0)
-            # Set the game variables from the FEN string
-            self.turn = fen[1]  # Set the turn
-            self.__castling_rights = {
-                "w": {"O-O": True if "K" in fen[2] else False, "O-O-O": True if "Q" in fen[2] else False},
-                "b": {"O-O": True if "k" in fen[2] else False, "O-O-O": True if "q" in fen[2] else False}
-            }
-            self.__half_moves = int(fen[4])
-            self.__number_of_moves = int(fen[5])
+                if char.lower() in pieces:
+                    if char.islower():
+                        piece = pieces[char]("b", pos)
+                        self.__pieces.append(piece)
+                        self.__board[pos[0]][pos[1]] = piece
+                    else:
+                        piece = pieces[char.lower()]("w", pos)
+                        self.__pieces.append(piece)
+                        self.__board[pos[0]][pos[1]] = piece
+                    pos = (pos[0], pos[1] + 1)
+            pos = (pos[0] + 1, 0)
+        # Set the game variables from the FEN string
+        self.turn = fen[1]  # Set the turn
+        self.__castling_rights = {
+            "w": {"O-O": True if "K" in fen[2] else False, "O-O-O": True if "Q" in fen[2] else False},
+            "b": {"O-O": True if "k" in fen[2] else False, "O-O-O": True if "q" in fen[2] else False}
+        }
+        self.__half_moves = int(fen[4])
+        self.__number_of_moves = int(fen[5])
 
     def fen(self):
         """ Returns a FEN representation of the board """
@@ -98,8 +75,8 @@ class ChessRepository:
             if empty_squares != 0:
                 fen += str(empty_squares)
             FEN = fen + "/" + FEN
-        FEN = FEN[:-1] # Remove the last slash
-        FEN += " " + self.turn # Add the turn
+        FEN = FEN[:-1]  # Remove the last slash
+        FEN += " " + self.turn  # Add the turn
 
         # Castling rights
         castling_rights = ""
@@ -117,8 +94,8 @@ class ChessRepository:
         # TODO: En passant
         FEN += " -"  # Placeholder, no en passant support
 
-        FEN += " " + str(self.half_moves) # Number of half moves since the last capture or pawn move
-        FEN += " " + str(self.number_of_moves // 2 + 1) # Number of full moves
+        FEN += " " + str(self.half_moves)  # Number of half moves since the last capture or pawn move
+        FEN += " " + str(self.number_of_moves // 2 + 1)  # Number of full moves
         return FEN
 
     # Getters
@@ -191,3 +168,12 @@ class ChessRepository:
     @result.setter
     def result(self, result):
         self.__result = result
+
+    @history.setter
+    def history(self, history):
+        self.__history.append(history)
+
+    def remove_piece(self, piece):
+        """ Remove a piece from the board """
+        self.__board[piece.position[0]][piece.position[1]] = None
+        self.__pieces = [p for p in self.__pieces if p != piece and p is not None]

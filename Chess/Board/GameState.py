@@ -39,6 +39,16 @@ class GameState:
         # Make a copy of the board and the pieces
         initial_board = deepcopy(self.board.board)
         initial_pieces = deepcopy(self.board.pieces)
+        initial_half_moves = deepcopy(self.board.half_moves)
+
+        # did_it_fuck_up = 0
+        # for piece in initial_pieces:
+        #     if isinstance(piece, King) and piece.color == "w":
+        #         did_it_fuck_up += 1
+        #     if isinstance(piece, King) and piece.color == "b":
+        #         did_it_fuck_up += 1
+        # if did_it_fuck_up != 2:
+        #     raise Exception("It fucked up")
 
         # Calculate the start and end squares
         end, start = process_algebraic_notation(move)
@@ -51,10 +61,7 @@ class GameState:
         if piece.color != self.board.turn:
             raise WrongColor("That's not your piece!")
         # Check if the move is legal
-        if not isinstance(piece, King):
-            if end not in piece.get_legal_moves(self.board.board, self.board.history):
-                raise IllegalMove("That move is illegal!")
-        elif end not in piece.get_king_legal_moves(self.board.board, self.board.pieces, self.board.castling_rights, self.board.history):
+        if end not in piece.get_legal_moves(self.board.board, self.board.history, self.board.pieces):
             raise IllegalMove("That move is illegal!")
 
         # Check if king is in check
@@ -65,21 +72,6 @@ class GameState:
                     king = square
                     break
 
-        if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
-            # Simulate the move to see if the king is still in check
-            if self.board.board[end[0]][end[1]] is not None and self.board.board[end[0]][end[1]].color != self.board.turn:
-                captured_piece = self.board.board[end[0]][end[1]]
-                for pieces in self.board.pieces:
-                    if pieces.position == captured_piece.position and pieces.type == captured_piece.type:
-                        self.board.pieces.remove(pieces)
-            self.board.board[end[0]][end[1]] = piece
-            self.board.board[start[0]][start[1]] = None
-            piece.position = end
-            if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
-                self.rollback(initial_board, initial_pieces)
-                raise IllegalMove("You must get out of check!")
-            self.rollback(deepcopy(initial_board), deepcopy(initial_pieces))
-
         # Check if the move is a capture
         if self.board.board[end[0]][end[1]] is not None:
             # If the piece is a friendly piece, the move is illegal
@@ -89,27 +81,36 @@ class GameState:
             captured_piece = self.board.board[end[0]][end[1]]
             for pieces in self.board.pieces:
                 if pieces.position == captured_piece.position and pieces.type == captured_piece.type:
-                    self.board.pieces.remove(pieces)
-            self.half_moves = 0
+                    self.board.remove_piece(captured_piece)
+            self.board.half_moves = 0
+
+        if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
+            # Simulate the move to see if the king is still in check
+            if self.board.board[end[0]][end[1]] is not None and self.board.board[end[0]][end[1]].color != self.board.turn:
+                captured_piece = self.board.board[end[0]][end[1]]
+                for pieces in self.board.pieces:
+                    if pieces.position == captured_piece.position and pieces.type == captured_piece.type:
+                        self.board.remove_piece(captured_piece)
+            self.board.board[end[0]][end[1]] = piece
+            self.board.board[start[0]][start[1]] = None
+            piece.position = end
+            if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
+                self.rollback(initial_board, initial_pieces)
+                raise IllegalMove("You must get out of check!")
+            self.rollback(deepcopy(initial_board), deepcopy(initial_pieces), deepcopy(initial_half_moves))
 
         # Castling rights
-        if (self.board.castling_rights[self.board.turn]["O-O"] or self.board.castling_rights[self.board.turn]["O-O-O"]) and (
-                isinstance(piece, King) or isinstance(piece, Rook)):
-            if isinstance(piece, King) and abs(end[1] - start[1]) == 1:
-                # Remove the castling rights if the king moves
-                self.board.castling_rights[self.board.turn]["O-O"] = False
-                self.board.castling_rights[self.board.turn]["O-O-O"] = False
+        if isinstance(piece, Rook):
+            # Remove the castling rights if the rook moves
+            if start == (0, 0) or start == (7, 0):
+                king.castling_rights[0] = False
+            if start == (0, 7) or start == (7, 7):
+                king.castling_rights[1] = False
 
-            if isinstance(piece, Rook):
-                # Remove the castling rights if the rook moves
-                if start == (0, 0) or start == (7, 0):
-                    self.board.castling_rights[self.board.turn]["O-O-O"] = False
-                if start == (0, 7) or start == (7, 7):
-                    self.board.castling_rights[self.board.turn]["O-O"] = False
-
+        if (king.castling_rights[0] or king.castling_rights) and isinstance(piece, King):
             # Check if the move is a castling move
             if isinstance(piece, King) and abs(end[1] - start[1]) == 2 and (
-                    self.board.castling_rights[self.board.turn]["O-O"] or self.board.castling_rights[self.board.turn]["O-O-O"]):
+                    king.castling_rights[0] or king.castling_rights[1]):
                 # Check if there are pieces between the king and the rook
                 if end[1] > 4 and self.board.board[end[0]][end[1] - 1] is not None and self.board.board[end[0]][end[1] - 2] \
                         is not None:
@@ -118,31 +119,29 @@ class GameState:
                         is not None:
                     raise IllegalMove("You can't castle through pieces!")
                 # If there are no pieces between the king and the rook, check the castling rights
-                elif end not in king.get_king_legal_moves(self.board.board, self.board.pieces, self.board.castling_rights, self.board.history):
+                elif end not in king.get_legal_moves(self.board.board, self.board.history, self.board.pieces):
                     raise IllegalMove(f'You don\'t have the right to castle '
-                                      f'{"king" if self.board.castling_rights[self.board.turn]["O-O"] else "queen"} side!')
+                                      f'{"king" if king.castling_rights[0] else "queen"} side!')
 
                 # If the king is not in check and there are no pieces between the king and the rook, castle
                 else:
                     # Move the rook
                     if end[1] == 6:
                         if self.board.board[end[0]][7] is None:
-                            self.board.castling_rights[self.board.turn]["O-O"] = False
                             raise IllegalMove("Something went wrong")
                         self.board.board[end[0]][7].position = (end[0], 5)
                         self.board.board[end[0]][5] = self.board.board[end[0]][7]
                         self.board.board[end[0]][7] = None
                     else:
                         if self.board.board[end[0]][0] is None:
-                            self.board.castling_rights[self.board.turn]["O-O-O"] = False
                             raise IllegalMove("Something went wrong")
                         self.board.board[end[0]][0].position = (end[0], 3)
                         self.board.board[end[0]][3] = self.board.board[end[0]][0]
                         self.board.board[end[0]][0] = None
 
-                # Remove the castling rights
-                self.board.castling_rights[self.board.turn]["O-O"] = False
-                self.board.castling_rights[self.board.turn]["O-O-O"] = False
+            # Remove the castling rights
+            king.castling_rights[0] = False
+            king.castling_rights[1] = False
 
         # Check if the move is an en passant capture
         if isinstance(piece, Pawn) and self.board.board[end[0]][end[1]] is None and end[1] != start[1]:
@@ -154,7 +153,7 @@ class GameState:
         self.board.board[end[0]][end[1]] = piece
         piece.position = end
         if isinstance(piece, Pawn):
-            self.half_moves = 0
+            self.board.half_moves = 0
         # Check if the king is in check after the move
         if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
             self.rollback(initial_board, initial_pieces)
@@ -167,7 +166,7 @@ class GameState:
             self.board.board[end[0]][end[1]] = Queen(piece.color, end)
 
         # Update the board.history
-        self.board.history.append(move)
+        self.board.history = move
 
         # Update the turn
         self.board.turn = "b" if self.board.turn == "w" else "w"
@@ -176,24 +175,21 @@ class GameState:
             if isinstance(i, King) and i.color == self.board.turn:
                 king = i
                 break
-        initial_board, initial_pieces = deepcopy(self.board.board), deepcopy(self.board.pieces)
 
         # Update the list of pieces
         self.board.pieces = [piece for row in self.board.board for piece in row if piece is not None]
         self.board.number_of_moves += 1
-        initial_pieces = deepcopy(self.board.pieces)
+        initial_board, initial_pieces = deepcopy(self.board.board), deepcopy(self.board.pieces)
         # Check if the king is in checkmate
         if king.is_in_check(self.board.board, self.board.pieces, self.board.history):
-            if not king.get_king_legal_moves(self.board.board, self.board.pieces,
-                                             {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}},
-                                             self.board.history):
+            if not king.get_legal_moves(self.board.board, self.board.history, self.board.pieces):
                 # If the king has no legal moves, check if the checking piece can be captured or blocked
                 move_found = False
                 for i in self.board.pieces:
                     if i.color == self.board.turn:
                         if isinstance(i, King):
                             continue
-                        legal_moves = i.get_legal_moves(self.board.board, self.board.history)
+                        legal_moves = i.get_legal_moves(self.board.board, self.board.history, self.board.pieces)
                         for move in legal_moves:
                             self.board.board[move[0]][move[1]] = i
                             self.board.board[i.position[0]][i.position[1]] = None
@@ -212,9 +208,7 @@ class GameState:
 
         # Check if the king is in stalemate
         else:
-            if not king.get_king_legal_moves(self.board.board, self.board.pieces,
-                                             {"w": {"O-O": False, "O-O-O": False}, "b": {"O-O": False, "O-O-O": False}},
-                                             self.board.history):
+            if not king.get_legal_moves(self.board.board, self.board.history, self.board.pieces):
                 # If the king has no legal moves but is not in check, check if the player has any legal moves
                 move_found = False
                 for i in self.board.pieces:
@@ -222,7 +216,7 @@ class GameState:
                         self.rollback(deepcopy(initial_board), deepcopy(initial_pieces))
                         if isinstance(i, King):
                             continue
-                        legal_moves = i.get_legal_moves(self.board.board, self.board.history)
+                        legal_moves = i.get_legal_moves(self.board.board, self.board.history, self.board.pieces)
                         if legal_moves:
                             move_found = True
                             break
@@ -246,11 +240,12 @@ class GameState:
 
         # TODO: Check if the game is over due to threefold repetition
 
-    def rollback(self, board, pieces):
+    def rollback(self, board, pieces, half_moves=None):
         """ Function to roll back the board and pieces to a previous state """
         self.board.board = board
         self.board.pieces = pieces
-
+        if half_moves is not None:
+            self.board.half_moves = half_moves
     def get_board(self):
         """ Returns the board """
         return self.board
@@ -261,8 +256,7 @@ class GameState:
         piece: Piece | King = self.board.board[start[0]][start[1]]
         if piece is None:
             raise IllegalMove("There is no piece at the start location!")
-        return piece.get_legal_moves(self.board.board, self.board.history) if not isinstance(piece, King) else \
-            piece.get_king_legal_moves(self.board.board, self.board.pieces, self.board.castling_rights, self.board.history)
+        return piece.get_legal_moves(self.board.board, self.board.history, self.board.pieces)
 
     def possible_moves(self):
         """ Return all possible moves for the current player """
@@ -280,6 +274,8 @@ class GameState:
             moves = self.possible_moves()
         if moves:
             move = choice(moves)
+            if moves is None:
+                raise IllegalMove("There are no legal moves!")
             try:
                 self.make_move(move)
             except IllegalMove:
@@ -298,7 +294,7 @@ class GameState:
 
     def get_result(self):
         """ Returns the result of the game """
-        return self.result
+        return self.board.result
 
     def is_insufficient_material(self):
         """ Checks if there is enough material on the board to checkmate """
@@ -338,6 +334,16 @@ class GameState:
 
     def fen(self):
         return self.board.fen()
+
+    def validate_move(self, move):
+        initial_board, initial_pieces = deepcopy(self.board.board), deepcopy(self.board.pieces)
+        try:
+            self.make_move(move)
+            self.rollback(initial_board, initial_pieces)
+            return True
+        except IllegalMove:
+            self.rollback(initial_board, initial_pieces)
+            return False
 
 if __name__ == "__main__":
 
