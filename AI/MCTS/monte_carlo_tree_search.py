@@ -1,10 +1,8 @@
 import io
-import json
+import pickle
 import pstats
-import random
 import math
 from collections import deque
-from copy import deepcopy
 from datetime import time
 
 from AI.MCTS.Exceptions.LosingState import LosingState
@@ -89,7 +87,7 @@ class MCTS:
 
     def _expand(self, node: Node) -> Node:
         """ Expand the selected node by creating new children """
-        next_state = deepcopy(node.state)
+        next_state = pickle.loads(pickle.dumps(node.state, -1))
         next_state.play_random_move()
         new_node = Node(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.board.history[-1])
         node.children.append(new_node)
@@ -97,7 +95,7 @@ class MCTS:
 
     def _simulate(self, node: Node) -> int:
         """ Simulate the game to a terminal state and return the result """
-        state = deepcopy(node.state)
+        state = pickle.loads(pickle.dumps(node.state, -1))
         start = time.time()
         while not state.board.game_over:
             hashtable_result = self.hashtable.lookup(state)
@@ -147,7 +145,7 @@ class MCTS:
             result = self._simulate(node)
             self._backpropagate(node, result)
 
-        best_child = max(self.current_node.children, key=lambda c: c.visits)
+        best_child = max(self.current_node.children, key=lambda c: c.ucb1(self.exploration_constant))
         self.current_node = best_child
         return best_child.move
 
@@ -168,7 +166,7 @@ if __name__ == "__main__":
     chess_repository = ChessRepository()
     chess_repository.initialize_board()
     chess_state = GameState(chess_repository)
-    mcts = MCTS(chess_state, iterations=1)
+    mcts = MCTS(chess_state, iterations=20)
     start = time.time()
     while not chess_state.board.game_over:
         pr = cProfile.Profile()

@@ -1,3 +1,4 @@
+import pickle
 from copy import deepcopy
 
 from Chess.Pieces.piece import Piece
@@ -11,7 +12,7 @@ class King(Piece):
     def get_legal_moves(self, board, move_history, pieces):
         legal_moves = []
         enemy_pieces = []
-        for piece in deepcopy(pieces):
+        for piece in pickle.loads(pickle.dumps(pieces, -1)):
             if piece.color != self.color:
                 enemy_pieces.append(piece)
 
@@ -20,8 +21,8 @@ class King(Piece):
             for col_offset in [-1, 0, 1]:
                 if row_offset == 0 and col_offset == 0:
                     continue
-                board_copy = deepcopy(board)
-                initial_position = deepcopy(self._position)
+                board_copy = pickle.loads(pickle.dumps(board, -1))
+                initial_position = pickle.loads(pickle.dumps(self._position, -1))
                 new_row = self._position[0] + row_offset
                 new_col = self._position[1] + col_offset
                 if 0 <= new_row < 8 and 0 <= new_col < 8:
@@ -41,7 +42,7 @@ class King(Piece):
 
         # Check if the king can castle
         if self.castling_rights[0] and self.position == (row, 4):
-            board_copy = deepcopy(board)
+            board_copy = pickle.loads(pickle.dumps(board, -1))
             # Check if the squares between the king and the rook are empty
             if board[row][col + 1] is None and board[row][col + 2] is None and self.position == (row, 4):
                 # Check if the king doesn't pass through or end up in check
@@ -59,7 +60,7 @@ class King(Piece):
                 self._position = (row, col)
 
         if self.castling_rights[1] and self.position == (row, 4):
-            board_copy = deepcopy(board)
+            board_copy = pickle.loads(pickle.dumps(board, -1))
             # Check if the squares between the king and the rook are empty
             if board[row][col - 1] is None and board[row][col - 2] is None:
                 # Check if the king doesn't pass through or end up in check
@@ -79,8 +80,6 @@ class King(Piece):
         return legal_moves
 
     def is_in_check(self, board, pieces, move_history):
-        castling_rights = {"w": {"O-O": False, "O-O-O": False},
-                           "b": {"O-O": False, "O-O-O": False}}
         enemy_pieces = []
         for piece in pieces:
             if piece.color != self.color:

@@ -30,3 +30,10 @@
 | 4    | 0.90       | 0.95       | 1.10       | 1.20       |
 | 5    | 0.97       | 0.95       | 1.10       | 1.20       |
 | 6    | 1.06       | 1.12       | 1.25       | 1.40       |
+
+Aneurysms:
+- We'll be using this table to determine the number of aneurysms I had in the past 24 hours:
+- 
+| Reason                              | Aneurysms |
+|-------------------------------------|-----------|
+| En passant captures the wrong piece | 1         |
