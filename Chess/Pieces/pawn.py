@@ -48,10 +48,39 @@ class Pawn(Piece):
                     legal_moves.append((last_move[1][0] - direction, last_move[1][1]))
         return legal_moves
 
-    def get_value(self):
+    def get_value(self, board, move_history) -> float:
         # TODO: Implement a better evaluation function
         # Evaluate the value of the pawn based on its position and other factors
-        # Pawns are worth 1 point, but their value increases as they move closer to the other side of the board
-        # Or if the pawn is protected by a piece, its value increases, if the pawn is passed, its value increases
-        # If the pawn is isolated, its value decreases, if the pawn is doubled, its value decreases, etc.
-        return 1  # Hard coded value for now
+        return 1 + self.positional_value(board, move_history)
+
+    def positional_value(self, board, move_history) -> float:
+        """ Returns the positional value of the pawn based on its position on the board
+            :param board: The current board state
+            :param move_history: The history of moves made in the game
+            :return: The positional value of the pawn """
+        pawn_file = self.position[1]
+        pawn_rank = self.position[0]
+        pawn_color = self.color
+        pawn_structure_value = 0
+        pawn_mobility_value = 0
+        pawn_protection_value = 0
+        pawn_advancement_value = 0
+        pawn_center_control_value = 0
+        # Pawn structure value
+        if pawn_rank in [3, 4]:
+            pawn_structure_value += 0.1
+        if pawn_color == "w":
+            if self.position in [(3, 3), (3, 4)]:
+                pawn_center_control_value += 0.1
+        else:
+            if self.position in [(4, 3), (4, 4)]:
+                pawn_center_control_value += 0.1
+        # Pawn mobility value
+        pawn_mobility_value = len(self.get_legal_moves(board, move_history)) * 0.1
+        # Pawn advancement value
+        if pawn_color == "w":
+            pawn_advancement_value = (8 - pawn_rank) * 0.1
+        else:
+            pawn_advancement_value = pawn_rank * 0.1
+        return pawn_structure_value + pawn_mobility_value + pawn_protection_value + pawn_advancement_value + \
+            pawn_center_control_value

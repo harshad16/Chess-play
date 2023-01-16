@@ -7,13 +7,18 @@ class Piece:
         self.color: str = color
         self._position: tuple[int, int] = position
 
-    @abstractmethod
-    def get_legal_moves(self, *args):
-        """ Generate a list of legal moves for the piece based on its movement patterns and the current board state """
+    def get_legal_moves(self, board, move_history, pieces):
+        """ Generate a list of legal moves for the piece based on its movement patterns and the current board state
+
+        :param board: The current state of the board
+        :param move_history: The history of moves that have been made
+        :param pieces: The pieces on the board
+        :return: A list of legal moves """
         pass
 
-    def get_value(self):
-        # Evaluate the value of the piece based on its position and other factors
+    @abstractmethod
+    def get_value(self, *args):
+        """ Evaluate the value of the piece based on its position and other factors """
         pass
 
     @property

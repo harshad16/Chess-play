@@ -1,6 +1,8 @@
+""" On hold due to the lack of time """
+
 # import json
 #
-# from Chess.Board.GameState import GameState, print_board
+# from ChessTest.Board.GameState import GameState, print_board
 #
 # import numpy as np
 # import tensorflow as tf

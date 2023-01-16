@@ -6,26 +6,47 @@ from collections import deque
 from datetime import time
 
 from AI.MCTS.Exceptions.LosingState import LosingState
-from AI.MCTS.hash_table import HashTable
+from AI.hash_table import HashTable
 from AI.MCTS.monte_carlo_node import Node
-from Chess.Board.ChessRepository import ChessRepository
-from Chess.Board.GameState import GameState, print_board
+from Chess.Repository.ChessRepository import ChessRepository
+from Chess.Board.GameState import GameState
+from Chess.utils.move_handlers import print_board
 from Chess.Exceptions.Checkmate import Checkmate
 import time
 import cProfile
 
+
 class MCTS:
-    def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2), depth_limit=None, use_opening_book=False):
-        self.iterations = iterations
-        self.exploration_constant = exploration_constant
+    """ The MCTS class is an implementation of the Monte Carlo Tree Search algorithm, it is used to simulate many
+    games of chess and use the results to select the best move for the current state of the game. The class takes as
+    input the initial state of the game represented by a GameState object, the number of iterations to run the
+    algorithm, and an optional exploration constant, depth limit and whether to use an opening book.
+
+    The algorithm works by selecting the next node to explore using the UCB1 algorithm, then simulating a game from
+    that node and back propagating the result of the simulation to the root node. The algorithm is run for the given
+    number of iterations and the best move is selected based on the number of wins for each child of the root node.
+
+    The following implementation also uses a hashtable to store the results of the simulations, this allows the
+    algorithm to avoid simulating the same game state multiple times. It also includes alpha-beta pruning to speed up
+    the simulations."""
+    def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2),
+                 depth_limit: int | None = None, use_opening_book: bool = False):
+        """ Initialize the MCTS object
+
+        :param state: The initial state of the game
+        :param iterations: The number of iterations to run the algorithm
+        :param exploration_constant: The exploration constant to use in the UCB1 algorithm
+        :param depth_limit: The depth limit to use in the algorithm
+        :param use_opening_book: Whether to use the opening book """
+        self.iterations = iterations  # The number of iterations to perform
+        self.exploration_constant = exploration_constant  # The exploration constant, sqrt(2) by default
         self.root = Node(state)
-        self.hashtable = HashTable(1009)
+        self.hashtable = HashTable(1009)  # The hashtable to store the results of the simulations
         self.current_node = self.root
         self.depth_limit = depth_limit
         self.use_opening_book = use_opening_book
-        # TODO: Implement the opening book to provide stronger play and faster moves in the opening, when there are a lot of possible moves
+        # TODO: Create a stronger opening book
         self.opening_book = {
-            # TODO: Create a stronger opening book
             # 6 moves of exchange QGD
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR": "d2d4",
             "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR": "c2c4",
@@ -42,7 +63,9 @@ class MCTS:
         }
 
     def set_current_node(self, state: GameState):
-        """ Set the current node to the one corresponding to the given state """
+        """ Set the current node to the one corresponding to the given state
+
+         :param state: The state to set the current node to"""
         # First look in the children of the current node
         for child in self.current_node.children:
             if child.state == state:
@@ -62,7 +85,11 @@ class MCTS:
             self.current_node = Node(state)
 
     def _select(self, node: Node, depth: int) -> Node:
-        """ Select the next node to explore using the UCB1 algorithm """
+        """ Select the next node to explore using the UCB1 algorithm
+
+         :param node: The node to select from
+         :param depth: The depth of the node
+         :return: The selected node """
         while not node.state.board.game_over:
             if node.not_fully_expanded():
                 return node
@@ -86,15 +113,24 @@ class MCTS:
         return node
 
     def _expand(self, node: Node) -> Node:
-        """ Expand the selected node by creating new children """
+        """ Expand the selected node by creating new children
+
+         :param node: The node to expand
+         :return: The new child node """
         next_state = pickle.loads(pickle.dumps(node.state, -1))
-        next_state.play_random_move()
+        try:
+            next_state.play_random_move()
+        except Checkmate:
+            return node
         new_node = Node(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.board.history[-1])
         node.children.append(new_node)
         return new_node
 
     def _simulate(self, node: Node) -> int:
-        """ Simulate the game to a terminal state and return the result """
+        """ Simulate the game to a terminal state and return the result
+
+         :param node: The node to simulate from
+         :return: The result of the simulation """
         state = pickle.loads(pickle.dumps(node.state, -1))
         start = time.time()
         while not state.board.game_over:
@@ -113,23 +149,28 @@ class MCTS:
                 try:
                     state.play_random_move()
                 except Checkmate as e:
-                    print(e)
-                    end = time.time()
-                    print(end - start)
+                    # print(e)
+                    # end = time.time()
+                    # print(end - start)
                     return state.board.result
-        end = time.time()
-        print(end - start)
+        # end = time.time()
+        # print(end - start)
         return state.board.result
 
     def _backpropagate(self, node: Node, result: int):
-        """ Backpropagate the result of the simulation from the terminal node to the root node """
+        """ Backpropagate the result of the simulation from the terminal node to the root node
+
+         :param node: The terminal node
+         :param result: The result of the simulation"""
         while node is not None:
             node.visits += 1
             node.wins += result
             node = node.parent
 
-    def select_move(self):
-        """ Perform the MCTS algorithm and select the best move """
+    def select_move(self) -> str:
+        """ Perform the MCTS algorithm and select the best move
+
+         :return: The best move """
         if self.use_opening_book:
             fen = self.root.state.fen().split(" ")[0]
             if fen in self.opening_book:
@@ -149,23 +190,12 @@ class MCTS:
         self.current_node = best_child
         return best_child.move
 
-# ! Not necessary yet
-# def load_dataset():
-#     # Load the dataset from a file
-#     data = []
-#     with open('opening_book.json') as f:
-#         data = json.load(f)
-#
-#     # Split the data into positions and labels
-#     fen = data['positions']['fen']
-#     move = data['positions']['move']
-#     return np.array(fen), np.array(move)
-
 
 if __name__ == "__main__":
     chess_repository = ChessRepository()
     chess_repository.initialize_board()
     chess_state = GameState(chess_repository)
+    chess_state.make_move("e2e4")
     mcts = MCTS(chess_state, iterations=20)
     start = time.time()
     while not chess_state.board.game_over:

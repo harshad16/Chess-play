@@ -22,7 +22,9 @@ class ChessRepository:
         self.__half_moves = 0  # The number of half-moves since the last capture or pawn move
 
     def initialize_board(self, fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"):
-        """ Initialize the board with the FEN provided, or the initial chess position if no FEN is provided """
+        """ Initialize the board with the FEN provided, or the initial chess position if no FEN is provided
+
+         :param fen: The FEN to initialize the board with"""
         pieces = {"r": Rook, "n": Knight, "b": Bishop, "q": Queen, "k": King, "p": Pawn}
         fen = fen.split(" ")
         fen_pieces = fen[0].split("/")
@@ -55,7 +57,9 @@ class ChessRepository:
         self.__number_of_moves = int(fen[5])
 
     def fen(self):
-        """ Returns a FEN representation of the board """
+        """ Returns a FEN representation of the board
+
+         :return: A FEN representation of the board"""
         FEN = ""
         for row in self.board:
             empty_squares = 0
@@ -136,7 +140,6 @@ class ChessRepository:
         return self.__turn
 
     # Setters
-
     @board.setter
     def board(self, board):
         self.__board = board
@@ -174,6 +177,8 @@ class ChessRepository:
         self.__history.append(history)
 
     def remove_piece(self, piece):
-        """ Remove a piece from the board """
+        """ Remove a piece from the board
+
+         :param piece: The piece to remove"""
         self.__board[piece.position[0]][piece.position[1]] = None
         self.__pieces = [p for p in self.__pieces if p != piece and p is not None]

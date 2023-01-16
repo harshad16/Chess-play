@@ -1,16 +1,16 @@
 import sys
 
-from PyQt5.QtCore import Qt, pyqtSignal, QObject
+from PyQt5.QtCore import QObject
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QLabel
 from PyQt5.QtCore import QEvent
 
-from Chess.Board.ChessRepository import ChessRepository
-from Chess.Board.GameState import GameState, print_board
+from Chess.Repository.ChessRepository import ChessRepository
+from Chess.Board.GameState import GameState
+from Chess.utils.move_handlers import print_board
 from Chess.Exceptions.Checkmate import Checkmate
 from Chess.Exceptions.IllegalMoveException import IllegalMove
 from Chess.Exceptions.WrongColor import WrongColor
-from Chess.Pieces.king import King
 
 
 class ChessGUI(QObject):
@@ -20,7 +20,7 @@ class ChessGUI(QObject):
         self.app = QApplication(sys.argv)
         # Create the main window
         self.window = QMainWindow()
-        self.window.setWindowTitle("Chess")
+        self.window.setWindowTitle("ChessTest")
         self.window.setFixedSize(800, 800)
 
         # Create the central widget
@@ -62,13 +62,14 @@ class ChessGUI(QObject):
         # Run the application
         sys.exit(self.app.exec_())
 
-    # ! This function is deprecated. And also it's quite cursed.
+    # ! This function is deprecated. And also it was quite cursed.
     # def unholyHandler(self, label, event):
     #     print('aaaaaaaaaaaaaa')
     #     if event.type() == QEvent.MouseButtonPress:
     #         print(label.text())
 
     def createPieces(self):
+        """ Creates the pieces on the board """
         # go over gamestate board and create pieces
         for col in self.chess.board.board:
             for element in col:
@@ -86,12 +87,18 @@ class ChessGUI(QObject):
         return
 
     def recreate_pieces(self):
+        """ Recreates the pieces on the board """
         for piece in self.pieces:
             self.grid_layout.removeWidget(piece)
         self.pieces = []
         self.createPieces()
 
     def eventFilter(self, source, event):
+        """ Handles the events for the pieces and the squares
+
+        :param source: The source of the event
+        :param event: The event
+        :return: True if the event was handled, False otherwise"""
         if event.type() == QEvent.MouseButtonPress:  # from PyQt5.QtCore import QEvent
             # print(source.accessibleDescription())
             if isinstance(source, QLabel):
@@ -134,7 +141,10 @@ class ChessGUI(QObject):
         return super().eventFilter(source, event)
 
     def highlight_legal_moves(self, legal_moves):
-        """ Highlights the legal moves for the piece on the board """
+        """ Highlights the legal moves for the piece on the board
+
+         :param legal_moves: A list of legal moves for the piece
+         """
         for move in legal_moves:
             for i in range(self.grid_layout.count()):
                 cell = self.grid_layout.itemAt(i)

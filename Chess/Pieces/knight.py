@@ -24,7 +24,22 @@ class Knight(Piece):
         return legal_moves
         pass
 
-    def get_value(self):
+    def get_value(self, board, move_history=None) -> float:
         # TODO: Implement a better evaluation function
         # Evaluate the value of the knight based on its position and other factors
-        return 3  # Hard coded value for now
+
+        return 3 + self.positional_value(board)# Hard coded value for now
+
+    def positional_value(self, board):
+        """ Returns the positional value of the knight based on its position on the board"""
+        knight_moves = self.get_legal_moves(board)
+        knight_mobility_value = 0
+        knight_control_value = 0
+        knight_outpost_value = 0
+        # Knight mobility value
+        knight_mobility_value = len(knight_moves) * 0.1
+        # Knight control value
+        for square in knight_moves:
+            if square in ["d4", "d5", "e4", "e5"]:
+                knight_control_value += 0.1
+        return knight_mobility_value + knight_control_value
