@@ -371,6 +371,7 @@ class GameState:
 
     def game_over(self):
         return self.board.game_over
+
     # Potentially useless
     # def validate_move(self, move):
     #     initial_board = pickle.loads(pickle.dumps(self.board.board, -1))

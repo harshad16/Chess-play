@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QLabel
 from PyQt5.QtCore import QEvent
 
+from AI.MCTS.monte_carlo_tree_search import MCTS
+from AI.Minimax.minimax import Minimax
 from Chess.Repository.ChessRepository import ChessRepository
 from Chess.Board.GameState import GameState
 from Chess.utils.move_handlers import print_board
@@ -14,9 +16,11 @@ from Chess.Exceptions.WrongColor import WrongColor
 
 
 class ChessGUI(QObject):
-    def __init__(self, chess_repository):
+    def __init__(self, state: GameState, ai: MCTS | Minimax | None = None):
         super().__init__()
-        self.chess = GameState(chess_repository)
+        self.chess = state
+        self.ai = ai
+        self.chess.make_move(ai.select_move(self.chess))
         self.app = QApplication(sys.argv)
         # Create the main window
         self.window = QMainWindow()
@@ -70,14 +74,13 @@ class ChessGUI(QObject):
 
     def createPieces(self):
         """ Creates the pieces on the board """
-        # go over gamestate board and create pieces
         for col in self.chess.board.board:
             for element in col:
                 if element is not None:
                     piece = QLabel(self.central_widget)
 
                     color_name = "white" if element.color == "w" else "black"
-                    pixmap = QPixmap(f"../Resources/{color_name}_{type(element).__name__.lower()}.png")
+                    pixmap = QPixmap(f"Chess/Resources/{color_name}_{type(element).__name__.lower()}.png")
                     piece.setPixmap(pixmap)
 
                     piece.setAccessibleDescription(self.characters[element.position[1]] + str(element.position[0] + 1))
@@ -107,37 +110,58 @@ class ChessGUI(QObject):
                     legal_moves = self.chess.get_legal_moves(source.accessibleDescription())
                     self.highlight_legal_moves(legal_moves)
                 else:
+                    error = None
                     self.remove_pending_moves()
                     try:
                         self.chess.make_move(self.source.accessibleDescription() + source.accessibleDescription())
                     except IllegalMove as e:
-                        print(e)
+                        error = e
                     except WrongColor as e:
-                        print(e)
+                        error = e
                     except Checkmate as e:
-                        raise e
+                        print(e)
+                        self.window.close()
                     print_board(self.chess.get_board())
                     self.recreate_pieces()
                     # Clear the source square
                     self.source = None
+
+                    if error is None and self.ai is not None:
+                        from time import time
+                        start = time()
+                        move = self.ai.select_move(self.chess)
+                        print(time() - start)
+                        self.chess.make_move(move)
+                        self.recreate_pieces()
                 # self.grid_layout.removeWidget(source)
                 # self.pieces.remove(source)
                 # source.deleteLater()
             elif self.source is not None:
                 self.remove_pending_moves()
+                error = None
                 try:
                     self.chess.make_move(self.source.accessibleDescription() + source.accessibleDescription())
                 except IllegalMove as e:
-                    print(e)
+                    error = e
                 except WrongColor as e:
-                    print(e)
+                    error = e
                 except Checkmate as e:
-                    raise e
-                print_board(self.chess.get_board())
+                    print(e)
+                    self.window.close()
+                # print_board(self.chess.get_board())
                 self.recreate_pieces()
                 self.source = None
+
+                if error is None and self.ai is not None:
+                    from time import time
+                    start = time()
+                    move = self.ai.select_move(self.chess)
+                    print(time() - start)
+                    self.chess.make_move(move)
+                    self.recreate_pieces()
             else:
                 self.source = None
+
         return super().eventFilter(source, event)
 
     def highlight_legal_moves(self, legal_moves):
@@ -154,7 +178,7 @@ class ChessGUI(QObject):
 
                 if (7 - row, col) == move:
                     #widget.setStyleSheet(("background-color: #F0D9B5;" if (col + row) % 2 == 0 else "background-color: #B58863;") + "background-image: radial-gradient(10px circle at 10px 10px, rgb(0, 255, 0) 50%, transparent 50.2%); background-size: 20px 20px; background-position: center; background-repeat: no-repeat;")
-                    widget.setStyleSheet("background-color:" + ("#F0D9B5" if (col + row) % 2 == 0 else "#B58863") + "; background-image: url(../Resources/circle.png); background-position: center; background-repeat: no-repeat; background-size: 5px 5px; background-size: contain;")
+                    widget.setStyleSheet("background-color:" + ("#F0D9B5" if (col + row) % 2 == 0 else "#B58863") + "; background-image: url(Chess/Resources/circle.png); background-position: center; background-repeat: no-repeat; background-size: 5px 5px; background-size: contain;")
 
     def remove_pending_moves(self):
         """ Removes the highlighted squares """
@@ -169,4 +193,5 @@ class ChessGUI(QObject):
 if __name__ == "__main__":
     chess_repository = ChessRepository()
     chess_repository.initialize_board()
-    gui = ChessGUI(chess_repository)
+    gui_state = GameState(chess_repository)
+    gui = ChessGUI(gui_state)

@@ -30,7 +30,7 @@ class Minimax:
             :param beta: The beta value
             :return: The minimum value for the current state"""
         if depth == 0 or state.game_over():
-            return state.get_value()
+            return state.get_value() * self.color
         value = float('inf')
         for move in state.possible_moves():
             child_state = pickle.loads(pickle.dumps(state, -1))
@@ -42,11 +42,11 @@ class Minimax:
                 if state.board.turn == "w":
                     return float('inf')
                 return float('-inf')
-            if self.hashtable.lookup(child_state):
-                value = min(value, self.hashtable.lookup(child_state)[0])
-            else:
-                value = min(value, self._max_value(child_state, depth - 1, alpha, beta))
-            self.hashtable.store(child_state, value, move)
+            # if self.hashtable.lookup(child_state):
+            #    value = min(value, self.hashtable.lookup(child_state)[0])
+            # else:
+            value = min(value, self._max_value(child_state, depth - 1, alpha, beta))
+            # self.hashtable.store(child_state, value, move)
             if value <= alpha:
                 return value
             beta = min(beta, value)
@@ -61,7 +61,7 @@ class Minimax:
             :return: The maximum value for the current state"""
 
         if depth == 0 or state.game_over():
-            return state.get_value()
+            return state.get_value() * self.color
         value = float('-inf')
         for move in state.possible_moves():
             child_state = pickle.loads(pickle.dumps(state, -1))
@@ -73,20 +73,20 @@ class Minimax:
                 if state.board.turn == "w":
                     return float('-inf')
                 return float('inf')
-            if self.hashtable.lookup(child_state):
-                value = max(value, self.hashtable.lookup(child_state)[0])
-            else:
-                value = max(value, self._min_value(child_state, depth - 1, alpha, beta))
-            self.hashtable.store(child_state, value, move)
+            # if self.hashtable.lookup(child_state):
+            #    value = max(value, self.hashtable.lookup(child_state)[0])
+            # else:
+            value = max(value, self._min_value(child_state, depth - 1, alpha, beta))
+            # self.hashtable.store(child_state, value, move)
             if value >= beta:
                 return value
             alpha = max(alpha, value)
         return value * self.color
 
-    def best_move(self, state: GameState) -> Tuple[str, float]:
+    def select_move(self, state: GameState) -> str:
         """ Select the best move from the current state
          :param state: The current state
-         :return: The best move and its value """
+         :return: The best move """
         self.state = state
         best_move = None
         best_value = float('-inf')
@@ -100,20 +100,20 @@ class Minimax:
                 continue
             except Checkmate:
                 if self.state.board.turn == "w":
-                    return move, float('-inf')
-                return move, float('inf')
-            if self.hashtable.lookup(child_state):
-                value = self.hashtable.lookup(child_state)[0]
-            else:
-                value = self._min_value(child_state, self.depth - 1, alpha, beta)
-                self.hashtable.store(child_state, value, move)
+                    return move  # , float('-inf')
+                return move  # , float('inf')
+            # if self.hashtable.lookup(child_state):
+            #     value = self.hashtable.lookup(child_state)[0]
+            # else:
+            value = self._min_value(child_state, self.depth - 1, alpha, beta)
+            # self.hashtable.store(child_state, value, move)
             if value > best_value:
                 best_value = value
                 best_move = move
             alpha = max(alpha, best_value)
             if beta <= alpha:
                 break
-        return best_move, best_value
+        return best_move  # , best_value
 
 
 if __name__ == "__main__":
@@ -124,10 +124,11 @@ if __name__ == "__main__":
     minimax_black = Minimax(game_state, 10, "b")
     while not game_state.game_over():
         start = time.time()
-        move, value = minimax_white.best_move(game_state)
-        print("White move: ", move, ", Value: ", value)
+        move = minimax_white.select_move(game_state)
+        print(time.time() - start)
+        print("White move: ", move)
         game_state.make_move(move)
-        move, value = minimax_black.best_move(game_state)
+        move = minimax_black.select_move(game_state)
         game_state.make_move(move)
-        print("Black move: ", move, ", Value: ", value)
+        print("Black move: ", move)
         print_board(game_state.board)

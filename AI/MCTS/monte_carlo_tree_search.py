@@ -167,10 +167,12 @@ class MCTS:
             node.wins += result
             node = node.parent
 
-    def select_move(self) -> str:
+    def select_move(self, state: GameState) -> str:
         """ Perform the MCTS algorithm and select the best move
 
          :return: The best move """
+        self.set_current_node(state)
+
         if self.use_opening_book:
             fen = self.root.state.fen().split(" ")[0]
             if fen in self.opening_book:
@@ -195,26 +197,20 @@ if __name__ == "__main__":
     chess_repository = ChessRepository()
     chess_repository.initialize_board()
     chess_state = GameState(chess_repository)
-    chess_state.make_move("e2e4")
-    mcts = MCTS(chess_state, iterations=20)
+    mcts = MCTS(chess_state, iterations=2)
     start = time.time()
     while not chess_state.board.game_over:
-        pr = cProfile.Profile()
-        pr.enable()
-        move = mcts.select_move()
-        pr.disable()
-        s = io.StringIO()
-        sortby = 'cumulative'
-        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-        ps.print_stats()
-        print(s.getvalue())
-        print(move)
+        # pr = cProfile.Profile()
+        # pr.enable()
+        move = mcts.select_move(chess_state)
+        # pr.disable()
+        # s = io.StringIO()
+        #  sortby = 'cumulative'
+        #  ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        # ps.print_stats()
+        # print(s.getvalue())
+        # print(move)
         print(f"\nTime taken on average/game: {(time.time() - start)/20}")
         chess_state.make_move(move)
         # mcts.set_current_node(chess_state)
         print_board(chess_state.get_board())
-        move = input("Move: ")
-        chess_state.make_move(move)
-        mcts.set_current_node(chess_state)
-        print_board(chess_state.get_board())
-        print(chess_state.fen())

@@ -27,8 +27,7 @@ class Knight(Piece):
     def get_value(self, board, move_history=None) -> float:
         # TODO: Implement a better evaluation function
         # Evaluate the value of the knight based on its position and other factors
-
-        return 3 + self.positional_value(board)# Hard coded value for now
+        return 3 + self.positional_value(board)
 
     def positional_value(self, board):
         """ Returns the positional value of the knight based on its position on the board"""
