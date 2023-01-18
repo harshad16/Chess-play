@@ -3,6 +3,9 @@ from Chess.Board.GameState import GameState
 
 class HashTable:
     def __init__(self, size):
+        """ Initialize the hash table
+
+        :param size: The size of the hash table (should be a prime number) """
         self.size = size
         self.table = [None] * size
 

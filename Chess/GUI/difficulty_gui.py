@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget, QPushButton, QGr
 
 class DifficultySelector(QObject):
     def __init__(self):
+        """ Initialize the difficulty selector """
         super().__init__()
         self.app = QApplication(sys.argv)
         self.window = QWidget()
@@ -48,18 +49,21 @@ class DifficultySelector(QObject):
         self.app.exec_()
 
     def difficulty_clicked(self):
+        """ Only allow one difficulty to be selected at a time """
         sender = self.sender()
         for btn in self.difficulties:
             if btn != sender:
                 btn.setChecked(False)
 
     def color_clicked(self):
+        """ Only allow one color to be selected at a time """
         sender = self.sender()
         for btn in self.colors:
             if btn != sender:
                 btn.setChecked(False)
 
     def get_difficulty(self):
+        """ Get the selected difficulty and color """
         difficulty, color = None, None
         for btn in self.difficulties:
             if btn.isChecked():
@@ -74,7 +78,6 @@ class DifficultySelector(QObject):
 
         if color == "Random" or color is None:
             color = choice(["White", "Black"])
-
 
         return difficulty, color
 

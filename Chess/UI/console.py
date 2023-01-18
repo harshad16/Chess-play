@@ -8,10 +8,13 @@ from Chess.Repository.ChessRepository import ChessRepository
 
 class UI:
     def __init__(self, game_state):
+        """ Initializes the UI
+        :param game_state: The game state to use """
         self.ai = None
         self.state = game_state
 
     def handle_algorithm_selection(self):
+        """ Handles the selection of the AI algorithm """
         commands = {"minimax": "Minimax",
                     "mcts": "MCTS"
                     }
@@ -24,6 +27,7 @@ class UI:
                 print("Invalid algorithm")
 
     def handle_color_selection(self):
+        """ Handles the selection of color the AI will be playing """
         commands = {"white": "w",
                     "black": "b"
                     }
@@ -36,6 +40,7 @@ class UI:
                 print("Invalid color")
 
     def handle_difficulty_selection(self):
+        """ Handles the difficulty that the AI will be playing at """
         commands = {"easy": 2,
                     "medium": 5,
                     "hard": 10
@@ -63,6 +68,7 @@ class UI:
         print("\n")
 
     def start(self):
+        """ Starts the game """
         algorithm = self.handle_algorithm_selection()
         difficulty = self.handle_difficulty_selection()
         color = self.handle_color_selection()
