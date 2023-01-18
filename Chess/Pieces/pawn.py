@@ -49,7 +49,6 @@ class Pawn(Piece):
         return legal_moves
 
     def get_value(self, board, move_history) -> float:
-        # TODO: Implement a better evaluation function
         # Evaluate the value of the pawn based on its position and other factors
         return 1 + self.positional_value(board, move_history)
 

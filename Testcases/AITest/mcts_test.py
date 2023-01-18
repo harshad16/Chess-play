@@ -17,18 +17,18 @@ class MCTSTest(unittest.TestCase):
     def test_mcts(self):
         """ Tests if the MCTS can be run. Most likely it will fail because of the random nature of the algorithm. """
         try:
-            self.assertEqual(self.mcts.select_move(), "d2d4")
+            self.assertEqual(self.mcts.select_move(self.game_state), "d2d4")
         except AssertionError:
             pass
 
     def test_mcts2(self):
         """ Tests the hashtables, but the test is very likely to fail. """
-        self.game_state.make_move(self.mcts.select_move())
+        self.game_state.make_move(self.mcts.select_move(self.game_state))
         self.game_state.make_move("d8e8")
         self.mcts.set_current_node(state=self.game_state)
-        self.game_state.make_move(self.mcts.select_move())
+        self.game_state.make_move(self.mcts.select_move(self.game_state))
         try:
-            self.assertEqual(self.mcts.select_move(), "d2d4")
+            self.assertEqual(self.mcts.select_move(self.game_state), "d2d4")
         except AssertionError:
             pass
 

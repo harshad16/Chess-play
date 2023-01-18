@@ -121,7 +121,7 @@ class ChessGUI(QObject):
                     except Checkmate as e:
                         print(e)
                         self.window.close()
-                    print_board(self.chess.get_board())
+                    # print_board(self.chess.get_board())
                     self.recreate_pieces()
                     # Clear the source square
                     self.source = None

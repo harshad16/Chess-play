@@ -73,7 +73,7 @@ class UI:
         difficulty = self.handle_difficulty_selection()
         color = self.handle_color_selection()
         if algorithm == "MCTS":
-            self.ai = MCTS(self.state, iterations=difficulty)  # The MCTS algorithm doesn't actually require a color
+            self.ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True)
         else:
             self.ai = Minimax(self.state, difficulty, color)
 
@@ -89,8 +89,10 @@ class UI:
                     self.print_board(self.state.board)
                 except IllegalMove as e:
                     print(e)
-                except WrongColor:
-                    print("Not your piece")
+                except WrongColor as e:
+                    print(e)
+                except IndexError:
+                    print("Invalid input")
 
 if __name__ == "__main__":
     game_repository = ChessRepository()
