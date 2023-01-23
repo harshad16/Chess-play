@@ -7,7 +7,7 @@ from datetime import time
 
 from AI.MCTS.Exceptions.LosingState import LosingState
 from AI.hash_table import HashTable
-from AI.MCTS.monte_carlo_node import Node
+from AI.MCTS.monte_carlo_node import MCTSNode
 from Chess.Repository.ChessRepository import ChessRepository
 from Chess.Board.GameState import GameState
 from Chess.utils.move_handlers import print_board
@@ -40,7 +40,7 @@ class MCTS:
         :param use_opening_book: Whether to use the opening book """
         self.iterations = iterations  # The number of iterations to perform
         self.exploration_constant = exploration_constant  # The exploration constant, sqrt(2) by default
-        self.root = Node(state)
+        self.root = MCTSNode(state)
         self.hashtable = HashTable(1009)  # The hashtable to store the results of the simulations
         self.current_node = self.root
         self.depth_limit = depth_limit
@@ -82,9 +82,9 @@ class MCTS:
                 return
             queue.extend(node.children)
         if not self.current_node.state == state:
-            self.current_node = Node(state)
+            self.current_node = MCTSNode(state)
 
-    def _select(self, node: Node, depth: int) -> Node:
+    def _select(self, node: MCTSNode, depth: int) -> MCTSNode:
         """ Select the next node to explore using the UCB1 algorithm
 
          :param node: The node to select from
@@ -112,7 +112,7 @@ class MCTS:
             depth += 1
         return node
 
-    def _expand(self, node: Node) -> Node:
+    def _expand(self, node: MCTSNode) -> MCTSNode:
         """ Expand the selected node by creating new children
 
          :param node: The node to expand
@@ -122,11 +122,11 @@ class MCTS:
             next_state.play_random_move()
         except Checkmate:
             return node
-        new_node = Node(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.board.history[-1])
+        new_node = MCTSNode(next_state, parent=node, alpha=node.alpha, beta=node.beta, move=next_state.board.history[-1])
         node.children.append(new_node)
         return new_node
 
-    def _simulate(self, node: Node) -> int:
+    def _simulate(self, node: MCTSNode) -> int:
         """ Simulate the game to a terminal state and return the result
 
          :param node: The node to simulate from
@@ -157,7 +157,7 @@ class MCTS:
         # print(end - start)
         return state.board.result
 
-    def _backpropagate(self, node: Node, result: int):
+    def _backpropagate(self, node: MCTSNode, result: int):
         """ Backpropagate the result of the simulation from the terminal node to the root node
 
          :param node: The terminal node
