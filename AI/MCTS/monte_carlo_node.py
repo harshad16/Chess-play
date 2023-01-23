@@ -4,7 +4,7 @@ from typing import Tuple
 from Chess.Board.GameState import GameState
 
 
-class Node:
+class MCTSNode:
     """ This is a node in the Monte Carlo Search Tree. """
 
     def __init__(self, state: GameState, parent=None, move=None, alpha=-float("inf"), beta=float("inf")):

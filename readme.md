@@ -17,14 +17,28 @@
 - Running the tests:
   - To run the tests, you need to run the test_runner.py file.
 - Making moves:
-  - To make moves in the command line interface, you need to enter the coordinates of the piece you want to move, and then the coordinates of the square you want to move it to.
+  - To make moves in the command line interface, you need to enter the coordinates of the piece you want to move, and then the coordinates of the square you want to move it to.  For example, `d2d4` will move the piece on the `d2` square to the `d4` square.
   - To make moves in the graphical user interface, you need to click on the piece you want to move, and then click on the square you want to move it to.
 
 ### Code Structure
-- ChessRepository: Handles the game board and pieces, each chess piece has its own class.
-- GameState: Implements game logic and rules.
-- MCTS: Implements Monte Carlo Tree Search algorithm for AI.
-- Minimax: Implements Minimax algorithm for AI.
-- GUI: Implements the graphical user interface.
-- UI: Implements the command line user interface.
+- `ChessRepository`: Handles the game board and pieces, each chess piece has its own class.
+- `GameState`: Implements game logic and rules.
+- `MCTS`: Implements Monte Carlo Tree Search algorithm for AI.
+  - `MCTSNode`: Implements the node of the MCTS tree.
+- `Minimax`: Implements Minimax algorithm for AI.
+- `GUI`: Implements the graphical user interface.
+- `UI`: Implements the command line user interface.
+- `Piece`: Base class for all chess pieces.
+  - `Pawn`: Inherits from Piece, implements Pawn's specific behavior.
+  - `Rook`: Inherits from Piece, implements Rook's specific behavior.
+  - `Knight`: Inherits from Piece, implements Knight's specific behavior.
+  - `Bishop`: Inherits from Piece, implements Bishop's specific behavior.
+  - `Queen`: Inherits from Piece, implements Queen's specific behavior.
+  - `King`: Inherits from Piece, implements King's specific behavior.
 
+### Documentation
+- For more information about the classes and methods, you can find their documentation in the Documentation folder.
+
+### Known issues
+- The Minimax algorithm on low depth tends to get stuck in local optimums, resulting in it playing the same move over and over again. For example, it might move the rook back and forth until the end of the game.
+- The HashTable implementation for the Minimax algorithm is not working properly, so it is not used in the current version of the project.
