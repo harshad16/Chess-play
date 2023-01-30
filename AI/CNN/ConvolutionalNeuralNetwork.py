@@ -36,10 +36,14 @@ class ConvolutionalNeuralNetwork:
         """ Train the model """
         # Load and preprocess the dataset
         board_tensor, turn_tensor, result_tensor = self.preprocess_data(path)
-        self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=10, batch_size=32)
+        self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=10, batch_size=32, validation_split=0.2)
 
     def predict(self, board_tensor, turn_tensor):
-        """ Predict the result """
+        """ Predict the result
+        :param board_tensor: The tensor of the board
+        :param turn_tensor: The tensor of the turn
+        :return: The prediction of the model
+        """
         return self.model.predict([board_tensor, turn_tensor])
 
     def save(self, path):
@@ -66,8 +70,17 @@ if __name__ == "__main__":
     model = ConvolutionalNeuralNetwork()
 
     # Train the model
-    model.train("dataset.json")
-
+    model.train("Resources/training_dataset.json")
+    board_tensor, turn_tensor, result_tensor = model.preprocess_data("Resources/testing_dataset.json")
+    # [0, 0, 1] = white wins, [0, 1, 0] = draw, [1, 0, 0] = black wins
+    results = model.predict(board_tensor, turn_tensor)
+    for result in results:
+        if result[0] > result[1] and result[0] > result[2]:
+            print("Black wins", result)
+        elif result[1] > result[0] and result[1] > result[2]:
+            print("Draw", result)
+        else:
+            print("White wins", result)
     # Save the model
     # model.save("model.h5")
 
@@ -75,7 +88,7 @@ if __name__ == "__main__":
     # model.load("model.h5")
 
     # Load and preprocess the dataset
-    # board_tensor, turn_tensor, result_tensor = model.preprocess_data("dataset.json")
+    # board_tensor, turn_tensor, result_tensor = model.preprocess_data("training_dataset.json")
 
     # Predict the result
     # prediction = model.predict(board_tensor, turn_tensor)

@@ -12,7 +12,7 @@ class TensorConverter:
         self.turn_mapping = {'w': 1, 'b': 0}
 
         # Create the mapping of the outcomes of the games
-        self.result_mapping = {'1-0': 1, '0-1': 0, '1/2-1/2': 0.5}
+        self.result_mapping = {'1-0': 2, '0-1': 0, '1/2-1/2': 1}
 
         # Create the FEN mapping of the pieces
         self.fen_piece_mapping = {'R': 'wR', 'N': 'wN', 'B': 'wB', 'Q': 'wQ', 'K': 'wK', 'P': 'wP',
@@ -64,7 +64,7 @@ class TensorConverter:
         result_tensor = []
 
         # Load the dataset
-        dataset = self.load_and_convert_dataset("dataset.json")
+        dataset = self.load_and_convert_dataset(file_path)
 
         # Iterate through the games
         for game in dataset["games"]:

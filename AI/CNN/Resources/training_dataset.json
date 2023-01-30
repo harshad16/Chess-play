@@ -1,0 +1,634 @@
+{
+  "games": [
+    {
+      "board": "r4rk1/1pq2pp1/p1n1p1b1/4P3/8/3B2QR/PPP2PP1/2KR4 b - - 4 20",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "2r1k2r/1p1b1pp1/pn2p2p/q7/1n1P4/1BP2NP1/PP1N1PP1/1QKRR3 b k - 6 18",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1r1qrbk1/2p2pp1/p1b2n1p/P3P3/3P4/N5BP/2B3P1/R2QR1K1 b - - 2 22",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "8/5p2/1p2k1p1/2p1P2p/5P2/P1R3PK/1P5P/3r4 b - - 1 47",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "8/8/8/8/7n/8/B5kp/4K3 w - - 0 2",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "5nkr/1rn2p1p/2q2p1Q/7P/8/4N3/8/K7 w - - 0 1",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "r1bk3r/1pp1nppp/8/pBKpp3/8/P7/1PPP2PP/R1BQ2NR w - - 3 14",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "6k1/6p1/8/6KQ/1r6/q2b4/8/8 w - - 0 1",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "7K/8/k1P5/7p/8/8/8/8 w - - 0 1",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "8/7k/3b1K1B/8/p7/p7/R7/1b6 w - - 0 6",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "8/k7/P2b2P1/KP1Pn2P/4R3/8/6np/8 w - - 0 6",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "8/kn6/8/1K6/8/8/8/7R w - - 0 6",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "q7/8/2p5/B2p2pp/5pp1/2N3k1/6P1/7K w - - 0 6",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "3b2k1/5p2/6p1/2p1P3/P1P4P/1p3NP1/5P2/1nB3K1 w - - 0 35",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "2q2rk1/pb2n2p/1p3p2/2r1p2P/2P4R/P1Q1P3/3NBPP1/3RK3 w - - 0 24",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "6k1/pp1r2p1/3P1b1p/3R4/6r1/4PN2/PP2K3/5R2 b - - 3 28",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1b2rk1/pp3qpp/2n5/2b2p2/4PNn1/P4N2/1P1BQPRP/R3KB2 b Q - 3 16",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1b2rk1/pp2q1pp/2n5/2b2p2/4PNn1/P4N2/1P1BQPRP/R3KB2 w Q - 4 17",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "5rk1/pp4pp/4p2r/4R1Q1/3n4/2q4B/P1P2PPP/5RK1 b - - 6 22",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "8/4pkqr/1r3Pp1/3pn3/3Pn2p/2N1Q1pP/2P5/B1b1RK2 w Q - 2 40",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "3Q4/n1b4r/6k1/3p4/3P3p/6pP/2PN2K1/Br2R3 w KQkq - 2 48",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "7b/8/1p6/2kb1pN1/pn1p2P1/R2PrP2/1R1N2KP/8 w - - 1 41",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bqk1nr/ppp4p/2n2p2/bB1pp3/3PNPp1/2P1P3/PP1N2PP/R1BQK2R w KQkq - 0 1",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1bqkb1r/pppp2pp/5p2/4p3/3nP1Q1/2NP3N/PPP2PPP/R1B1KB1R b KQkq - 0 7",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/5pp1/pN2pq1p/PbRp4/1P1P2Q1/3r2P1/7P/4R1K1 b - - 7 32",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "6k1/5pp1/pN2pq1p/PbRp4/1P1r4/6PQ/7P/4R1K1 b - - 1 33",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bqk2r/ppp2ppp/2n5/3p4/3Pn3/2N1P3/PP3PPP/R1BQKBNR w KQkq - 0 1",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "2r1qrk1/2Bnbpp1/bp2pn1p/3p4/p2PP3/P2N2P1/1PQN1PBP/2RR2K1 w - - 2 22",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 w - - 0 1",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 b - - 1 1",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 w - - 2 2",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 b - - 3 2",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 w - - 4 3",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 b - - 5 3",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r2q1rk1/pp3ppp/2n1p3/8/3b1B2/2N1P3/PPP2PPP/R2Q1RK1 w - - 6 4",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r2q1rk1/1ppb1ppp/p1n1p3/8/3P4/P1N1P3/1PPB1PPP/R2Q1RK1 b - - 0 1",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/4pn2/3p4/1b1P4/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/4p3/3n4/1b1P4/2N5/PPP2PPP/R1BQ1RK1 b - - 0 1",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/4p3/8/1b1n4/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/2n5/3p4/1b1Pn3/2N2N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/2n5/3p4/1b1P4/2N2N2/PPP2PPP/R1BQ1RK1 b - - 0 1",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bq1rk1/ppp2ppp/4p3/3n4/1b1P4/2N5/PPP2PPP/R1BQ1RK1 w - - 0 1",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "8/p7/5p1p/5k1P/1P2n1pQ/4p1P1/4q1PK/6R1 w - - 0 1",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r2q1rk1/1b1p1ppp/pb6/1p1NN3/1P1nn3/P7/BBP2PPP/1R1Q1RK1 b - - 0 1",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "1k1r1bnr/1b1q1pp1/2pp4/B6p/4PP2/3B4/PPP3PP/2KRQ2R b Kk - 0 1",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "1kr2bnr/1b1q1pp1/2pp4/B6p/4PP2/3B4/PPP3PP/2KRQ2R w Kk - 1 2",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1r5/p5pk/2p1Q1p1/q2pPp2/PRbP4/B7/2PK1PPP/7R b - - 0 1",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q1ppPp2/PRbP3P/B7/2PK1PP1/7R b - - 0 2",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1rr5/p5pk/2p1Q1p1/q2pPp2/PRbP4/B7/2PK1PPP/7R w - - 1 2",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q2pPp2/PpbP3P/B7/2PK1PP1/7R w - - 0 3",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q2pPp1P/P1bP4/p7/2PK1PP1/7R w - - 0 4",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q2pPp1P/PpbP4/B7/2PK1PP1/7R b - - 0 3",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q1ppPp1P/PR1P4/B7/2PKbPP1/7R b - - 0 3",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "r1r5/p5pk/4Q1p1/q1ppPp1R/PR1P4/B7/2PK1PP1/8 b - - 0 4",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "r3r3/p5pk/4Q1p1/q1ppPp2/PRbP3P/B7/2PK1PP1/7R w - - 1 3",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r3r3/p4Qpk/6p1/q1ppPp2/PRbP3P/B7/2PK1PP1/7R b - - 2 3",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "5q1k/p5p1/1p5p/7Q/4p1Pb/1PPbB3/P2K3P/3R3R b - - 1 27",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "7k/p5p1/1p5B/7Q/4p1Pb/qPPb4/P2K3P/3R3R b - - 0 28",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r4rk1/1bq2ppp/p2p1b2/1p1n2N1/2pN4/8/PPB3PP/R2Q1R1K w - - 0 20",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r1k/1bq3pB/p2ppb2/1p1n4/2pN4/8/PP4PP/R2Q1R1K w - - 0 22",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r1k/1bq2pp1/p2p2B1/1p1n2bQ/2pN4/8/PP4PP/R4R1K b - - 1 22",
+      "turn": "b",
+      "result": "0-1"
+    },
+	{
+		"board": "2r3k1/1r3p1p/1P4p1/p1R5/P2Q4/8/2ppq1PP/6RK b - - 1 36",
+		"turn" : "b",
+		"result": "0-1"
+	},
+    {
+      "board": "2r3k1/1r3p1p/1P4p1/p1R5/P2Q4/8/2ppq1PP/6RK b - - 1 36",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "2r3k1/1r3p1p/1P4p1/p1R5/P2Q4/8/2p1q1PP/3q2RK w - - 0 37",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "2r3k1/1r3p1p/1P4p1/p1R5/P2Q4/8/3pq1PP/2q3RK w - - 0 37",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "2R3k1/1r3p1p/1P4p1/p7/P2Q4/8/2p1q1PP/3q2RK b - - 0 37",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "2R1q1k1/1r3p1p/1P4p1/p7/P2Q4/8/2p3PP/3q2RK w - - 1 38",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "5rk1/p1p2r1p/8/2P5/1qB2P2/2nQP3/P5PK/5R2 b - - 1 30",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "2rr4/4kpp1/3p3p/1P1Rp3/1Qq5/8/6PP/4R2K w - - 0 36",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "3r1k2/5pp1/3p3p/1P6/2r5/8/4R1PP/4R2K b - - 1 38",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1r4k1/3p1p1p/3Pr1p1/ppq5/1p4PQ/7R/P1P2P1P/3R2K1 w - - 3 29",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "1r3k2/3p1p1Q/3Pr1p1/ppq5/1p4P1/7R/P1P2P1P/3R2K1 w - - 1 30",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "8/8/8/7P/8/6kp/P1P5/5K2 w - - 0 67",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "8/8/7P/8/8/6kp/P1P5/5K2 b - - 0 67",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r3r1k1/p1p2pb1/1p3q1p/6p1/1QB1n3/2P3B1/PP3PKP/3RR3 w - - 0 22",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r3r1k1/p1p2pb1/1p1n1q1p/3B2p1/1Q6/2P3B1/PP3PKP/3RR3 w - - 2 23",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4rk1/2q2p2/pp2pn2/4N1p1/3B1n2/1B6/PPP2Pb1/R2QR1K1 w - - 0 24",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3r1rk1/2q2p2/pp2p3/4R1pn/3B1nN1/1B6/PPP2Pb1/R2Q2K1 w - - 4 26",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3r1rk1/2q2p2/pp2p3/6Rn/3B1nN1/1B6/PPP2Pb1/R2Q2K1 b - - 0 26",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "3r1r2/2q2p1k/pp2p2N/6RQ/3B1n2/1B6/PPP2Pb1/R5K1 w - - 1 29",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3r2k1/p1p3pp/1pnrpp2/8/2P1p3/1P2P1Pb/RBQ1BP1P/6K1 w - - 3 21",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3r2k1/p1p3pp/1pnrpp2/8/2P1Q3/1P2P1Pb/RB2BP1P/6K1 b - - 0 21",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1rb4r/1p2b1k1/p2q4/P1pQR2n/2B3pp/2N4P/1PP2PP1/R5K1 b - - 3 23",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "1r5r/1p4k1/p4b2/P1p2q1n/2B3pp/2N4P/1PP1QPP1/3R2K1 w - - 0 27",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "1r5r/1p4k1/p4b2/P1p2q1n/2B3Pp/2N5/1PP1QPP1/3R2K1 b - - 0 27",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "1r5r/1p4k1/p4b2/P1p2P2/2B2n1p/2N5/1PP1QPP1/3R2K1 b - - 0 28",
+      "turn": "b",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "1r5r/1p4k1/p4b2/P1p2P2/2B4p/2N5/1PP1nPP1/3R2K1 w - - 0 29",
+      "turn": "w",
+      "result": "1/2-1/2"
+    },
+    {
+      "board": "3r2k1/1p3ppp/4pn2/1p2n3/4b1P1/5P1P/rP1R4/3R2K1 w - - 1 24",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3Rn1k1/1p3ppp/4p3/1p2n3/4b1P1/5P1P/rP6/3R2K1 w - - 1 25",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P1RpPP1/P3Q3/2K1P1R1/q6r b - - 0 38",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P1RpPP1/P1K1Q3/q3P1R1/7r b - - 2 39",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P1RpPP1/q3Q3/2K1P1R1/7r b - - 1 40",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P1RpPP1/2K1Q3/q3P1R1/7r b - - 3 41",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P2RPP1/2K1Q3/q3P1R1/1r6 b - - 0 42",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/1p4pp/p1p5/2Pp4/1P2RPP1/3K4/1q1QP1R1/3r4 b - - 4 44",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bqk2r/pp2npb1/2n1p1p1/1NP4p/4P2P/4pP2/PPPQ2P1/2KR1BNR w kq - 0 11",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1bn1k1r/ppN1npb1/4p1p1/2P4p/4P2P/4pP2/PPP3P1/2KR1BNR w - - 2 13",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "4r1k1/3b3p/2p2Q2/1p1p2p1/pP3P2/P7/5RPP/2B4K b - - 0 31",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "6k1/3b3p/2p2Q2/1p1p2p1/pP3P2/P7/6PP/2B1rR1K b - - 2 32",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "4rr1k/p1p3pp/8/2b5/2Q1N3/6P1/PP2PqNP/R1BR3K b - - 0 24",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "4rr1k/p1p3pp/8/2b5/2Q1N3/6P1/PP2P1NP/R1B2R1K b - - 0 25",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "4rr1k/p1p3pp/8/2b5/2Q1N3/6P1/PP2P1NP/R1BR1q1K w - - 1 25",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "1k1r3r/p4BR1/2p4p/2Q1p3/4Pn1n/2N2q2/PPP5/2KR4 b - - 1 25",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1k1r3r/p4BR1/2p4p/2Q1p3/4Pn1n/8/PPP5/2KN4 b - - 0 26",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "1k1r3r/p4BR1/2p4p/2Q1p3/4P2n/8/PPP1n3/1K1N4 b - - 2 27",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "4r1k1/pp3ppp/5P2/8/n2N4/5r2/P1P3PP/4RRK1 w - - 0 25",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "8/7b/7P/5pPk/p2p1P2/P2P1K2/8/8 b - - 34 70",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r4rk1/ppp3pp/8/2q1p1Q1/2P1P3/1P3NP1/P4RBP/7K b - - 0 22",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r1bqk2r/pppp1p2/2n4p/6p1/8/3BK1B1/P1P2PPP/Q6R w kq - 1 14",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "rnbqk2r/ppp1Pppp/8/2b5/8/5N2/PPP1PPPP/RNBQKB1R b KQkq - 0 5",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "rnbqk2r/ppp1Pppp/8/8/8/5N2/PPP1PbPP/RNBQKB1R w KQkq - 0 6",
+      "turn": "w",
+      "result": "0-1"
+    },
+    {
+      "board": "rnbqk2r/ppp1Pppp/8/8/8/5N2/PPP1PKPP/RNBQ1B1R b kq - 0 6",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "rnb1k2r/ppp1Pppp/8/8/8/4PN2/PPP2KPP/RNq2B1R w kq - 0 8",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1r4k/2pRn2p/8/5p2/1p3Pp1/1B2P1Pn/PP2KP2/7R w - - 2 26",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "3r4/b3k3/1p3p2/p2Pp2p/PrP1P2P/1P5B/4KBP1/1R6 b - - 0 43",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "r1q2rk1/2p2pp1/p5np/1p1NN3/4P3/1B4P1/PPP2PP1/R2bR1K1 w - - 0 18",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r1q2rk1/2p2pp1/p5Np/1p1N4/4P3/1B4P1/PPP2PP1/R2bR1K1 b - - 0 18",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "r4rk1/2p2pp1/p3q1Np/1p1N4/4P3/1B4P1/PPP2PP1/R2bR1K1 w - - 1 19",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r2/2p1Nppk/p3q1Np/1p6/4P3/1B4P1/PPP2PP1/R2bR1K1 w - - 3 20",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r2/1b3pk1/p2p2p1/1p1Nn3/4PR1B/3P3P/qpP3B1/4R1K1 b - - 1 26",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r4r2/1b3pk1/p2p2p1/1p1Nn3/4PR1B/3P3P/q1P3B1/1q2R1K1 w - - 0 27",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r2/1b3pk1/p2p1Bp1/1p1Nn3/4PR2/3P3P/q1P3B1/1q2R1K1 b - - 1 27",
+      "turn": "b",
+      "result": "0-1"
+    },
+    {
+      "board": "r4rk1/1b3p2/p2p1Bp1/1p1Nn3/4PR2/3P3P/q1P3B1/1q2R1K1 w - - 2 28",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4rk1/1b2Np2/p2p1Bp1/1p2n3/4PR2/3P3P/q1P3B1/1q2R1K1 b - - 3 28",
+      "turn": "b",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r2/1b2Np1k/p2p1Bp1/1p2n3/4PR2/3P3P/q1P3B1/1q2R1K1 w - - 4 29",
+      "turn": "w",
+      "result": "1-0"
+    },
+    {
+      "board": "r4r2/1b3p2/p2p1Bpk/1p1Nn3/4PR2/3P3P/q1P3B1/1q2R1K1 w - - 2 28",
+      "turn": "w",
+      "result": "1-0"
+    }
+  ]
+}
