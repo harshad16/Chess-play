@@ -23,7 +23,13 @@ class ConvolutionalNeuralNetwork:
         # Merge the branches
         concat = tf.keras.layers.concatenate([x, y])
 
-        # Add a fully connected layer
+        # Add the fully connected layers
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+
+        # Add the output layer
         output = tf.keras.layers.Dense(3, activation="softmax")(concat)
 
         # Create the model
@@ -33,7 +39,8 @@ class ConvolutionalNeuralNetwork:
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
     def train(self, path):
-        """ Train the model """
+        """ Train the model
+        :param path: The path to the dataset """
         # Load and preprocess the dataset
         board_tensor, turn_tensor, result_tensor = self.preprocess_data(path)
         self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=10, batch_size=32, validation_split=0.2)
@@ -47,16 +54,19 @@ class ConvolutionalNeuralNetwork:
         return self.model.predict([board_tensor, turn_tensor])
 
     def save(self, path):
-        """ Save the model """
+        """ Save the model
+        :param path: The path to save the model """
         self.model.save(path)
 
     def load(self, path):
-        """ Load the model """
+        """ Load the model
+        :param path: The path to the model """
         self.model = tf.keras.models.load_model(path)
 
     @staticmethod
     def preprocess_data(path):
-        """ Preprocess the data """
+        """ Preprocess the data
+         :param path: The path to the dataset """
         # Instantiate the converter
         converter = TensorConverter()
 
