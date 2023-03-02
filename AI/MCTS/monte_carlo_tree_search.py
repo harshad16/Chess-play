@@ -132,7 +132,7 @@ class MCTS:
          :param node: The node to simulate from
          :return: The result of the simulation """
         state = pickle.loads(pickle.dumps(node.state, -1))
-        start = time.time()
+        # start = time.time()
         while not state.board.game_over:
             hashtable_result = self.hashtable.lookup(state)
             if hashtable_result:

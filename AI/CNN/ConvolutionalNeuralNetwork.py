@@ -28,6 +28,10 @@ class ConvolutionalNeuralNetwork:
         concat = tf.keras.layers.Dense(64, activation="relu")(concat)
         concat = tf.keras.layers.Dense(64, activation="relu")(concat)
         concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
+        concat = tf.keras.layers.Dense(64, activation="relu")(concat)
 
         # Add the output layer
         output = tf.keras.layers.Dense(3, activation="softmax")(concat)
@@ -43,7 +47,7 @@ class ConvolutionalNeuralNetwork:
         :param path: The path to the dataset """
         # Load and preprocess the dataset
         board_tensor, turn_tensor, result_tensor = self.preprocess_data(path)
-        self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=10, batch_size=32, validation_split=0.2)
+        self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=128, batch_size=64, validation_split=0.3)
 
     def predict(self, board_tensor, turn_tensor):
         """ Predict the result
@@ -86,11 +90,11 @@ if __name__ == "__main__":
     results = model.predict(board_tensor, turn_tensor)
     for result in results:
         if result[0] > result[1] and result[0] > result[2]:
-            print("Black wins", result)
+            print("Black wins", round(result[0], 4), round(result[1], 4), round(result[2], 4))
         elif result[1] > result[0] and result[1] > result[2]:
-            print("Draw", result)
+            print("Draw", round(result[0], 4), round(result[1], 4), round(result[2], 4))
         else:
-            print("White wins", result)
+            print("White wins", round(result[0], 4), round(result[1], 4), round(result[2], 4))
     # Save the model
     # model.save("model.h5")
 

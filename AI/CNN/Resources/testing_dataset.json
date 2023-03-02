@@ -19,6 +19,11 @@
       "board": "3R1r1k/1p3pnp/2p4N/8/2b5/6P1/5P1P/4qBK1 w - - 2 31",
       "turn": "b",
       "result": "0-1"
+    },
+    {
+      "board": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "turn": "w",
+      "result": "1/2-1/2"
     }
   ]
 }
