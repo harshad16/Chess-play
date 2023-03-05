@@ -92,7 +92,33 @@ class TensorConverter:
         # Return the tensors
         return board_tensor, turn_tensor, result_tensor
 
+    def convert_for_prediction(self, fen: str):
+        """ Convert a board from FEN notation to a tensor for prediction.
+         :param fen: The FEN notation of the board """
+
+        board_tensor = []
+
+        # Obtain the turn from the FEN notation
+        turn = fen.split(' ')[1]
+
+        # Convert the FEN notation to a 2D array
+        board = self.convert_board_from_fen(fen)
+
+        # Create a tensor of the board
+        board_tensor.append(np.array([[self.piece_mapping[str(piece) if piece else None] for piece in row]
+                                      for row in board]))
+        # Create a tensor of the turn
+        turn_tensor = np.array([self.turn_mapping[turn]])
+
+        # Stack the tensors
+        board_tensor = np.stack(board_tensor, axis=0)
+        turn_tensor = np.stack(turn_tensor, axis=0)
+
+        # Return the tensors
+        return board_tensor, turn_tensor
 
 if __name__ == "__main__":
     converter = TensorConverter()
-    board_tensor, turn_tensor, result_tensor = converter.convert()
+    print(converter.convert("Resources/testing_dataset.json"))
+    print(converter.convert_for_prediction("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+    # board_tensor, turn_tensor, result_tensor = converter.convert()

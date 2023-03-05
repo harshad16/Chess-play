@@ -7,11 +7,12 @@ from Chess.Repository.ChessRepository import ChessRepository
 
 
 class UI:
-    def __init__(self, game_state):
+    def __init__(self, game_state, cnn):
         """ Initializes the UI
         :param game_state: The game state to use """
         self.ai = None
         self.state = game_state
+        self.cnn = cnn
 
     def handle_algorithm_selection(self):
         """ Handles the selection of the AI algorithm """
@@ -73,7 +74,7 @@ class UI:
         difficulty = self.handle_difficulty_selection()
         color = self.handle_color_selection()
         if algorithm == "MCTS":
-            self.ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True)
+            self.ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True, cnn=self.cnn)
         else:
             self.ai = Minimax(self.state, difficulty, color)
 

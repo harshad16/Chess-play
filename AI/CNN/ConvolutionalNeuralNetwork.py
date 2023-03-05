@@ -49,12 +49,20 @@ class ConvolutionalNeuralNetwork:
         board_tensor, turn_tensor, result_tensor = self.preprocess_data(path)
         self.model.fit([board_tensor, turn_tensor], result_tensor, epochs=128, batch_size=64, validation_split=0.3)
 
-    def predict(self, board_tensor, turn_tensor):
+    def predict(self, fen=None, board_tensor=None, turn_tensor=None):
         """ Predict the result
+        :param fen: The FEN of the board
         :param board_tensor: The tensor of the board
         :param turn_tensor: The tensor of the turn
         :return: The prediction of the model
         """
+        if fen is not None:
+            # Instantiate the converter
+            converter = TensorConverter()
+
+            # Convert the data
+            board_tensor, turn_tensor = converter.convert_for_prediction(fen)
+
         return self.model.predict([board_tensor, turn_tensor])
 
     def save(self, path):
@@ -87,7 +95,8 @@ if __name__ == "__main__":
     model.train("Resources/training_dataset.json")
     board_tensor, turn_tensor, result_tensor = model.preprocess_data("Resources/testing_dataset.json")
     # [0, 0, 1] = white wins, [0, 1, 0] = draw, [1, 0, 0] = black wins
-    results = model.predict(board_tensor, turn_tensor)
+    results = model.predict(board_tensor=board_tensor, turn_tensor=turn_tensor)
+    model.save("TrainedModels/cnn.h5")
     for result in results:
         if result[0] > result[1] and result[0] > result[2]:
             print("Black wins", round(result[0], 4), round(result[1], 4), round(result[2], 4))

@@ -372,6 +372,8 @@ class GameState:
     def game_over(self):
         return self.board.game_over
 
+    def get_turn(self):
+        return self.board.turn
     # Potentially useless
     # def validate_move(self, move):
     #     initial_board = pickle.loads(pickle.dumps(self.board.board, -1))
