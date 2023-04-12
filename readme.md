@@ -6,11 +6,13 @@
   - A Minimax class that implements the Minimax algorithm
   - A GUI class that implements the graphical user interface
   - A UI class that implements the command line user interface
-
+  - A CNN class that implements a convolutional neural network.
+  
 ### Getting started
 - Prerequisites:
   - Python 3.10.2 or newer
   - PyQT5.15 or newer
+  - Tensorflow 2.6.0 or newer
 - Running the project:
   - To run the project, you need to run the main.py file.
   - To switch between the command line and the graphical user interface, you need to change the value of the variable `use_gui` to `True` or `False` in the main.py file.
@@ -35,6 +37,8 @@
   - `Bishop`: Inherits from Piece, implements Bishop's specific behavior.
   - `Queen`: Inherits from Piece, implements Queen's specific behavior.
   - `King`: Inherits from Piece, implements King's specific behavior.
+- `ConvolutionalNeuralNetwork`: Implements a convolutional neural network.
+  - `TensorConverter`: Implements a class that converts a chess board to a tensor.
 
 ### Documentation
 - For more information about the classes and methods, you can find their documentation in the Documentation folder.
@@ -42,3 +46,4 @@
 ### Known issues
 - The Minimax algorithm on low depth tends to get stuck in local optimums, resulting in it playing the same move over and over again. For example, it might move the rook back and forth until the end of the game.
 - The HashTable implementation for the Minimax algorithm is not working properly, so it is not used in the current version of the project.
+- The CNN has a limited dataset, therefore it is not as accurate as it could be.
