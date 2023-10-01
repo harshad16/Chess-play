@@ -5,7 +5,6 @@ import math
 from collections import deque
 from datetime import time
 
-from AI.CNN.ConvolutionalNeuralNetwork import ConvolutionalNeuralNetwork
 from AI.MCTS.Exceptions.LosingState import LosingState
 from AI.hash_table import HashTable
 from AI.MCTS.monte_carlo_node import MCTSNode
@@ -31,8 +30,7 @@ class MCTS:
     algorithm to avoid simulating the same game state multiple times. It also includes alpha-beta pruning to speed up
     the simulations."""
     def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2),
-                 depth_limit: int | None = None, use_opening_book: bool = False,
-                 cnn: ConvolutionalNeuralNetwork = None):
+                 depth_limit: int | None = None, use_opening_book: bool = False):
         """ Initialize the MCTS object
 
         :param state: The initial state of the game
@@ -47,7 +45,7 @@ class MCTS:
         self.current_node = self.root
         self.depth_limit = depth_limit
         self.use_opening_book = use_opening_book
-        self.cnn = cnn
+
         # TODO: Create a stronger opening book
         self.opening_book = {
             # 6 moves of exchange QGD
@@ -126,7 +124,7 @@ class MCTS:
         except Checkmate:
             return node
         new_node = MCTSNode(next_state, parent=node, alpha=node.alpha, beta=node.beta,
-                            move=next_state.board.history[-1], cnn=self.cnn)
+                            move=next_state.board.history[-1])
         node.children.append(new_node)
         return new_node
 

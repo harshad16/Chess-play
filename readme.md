@@ -1,4 +1,8 @@
-### Project overview
+### Project 
+
+This is a experiment between minmax and mcts
+
+### Overview
 - This project is a fully functional chess game implemented in Python, that allows the users to play against a computer using various algorithms (MCTS and Minmax). It includes:
   - A chess repository class that manages the game board and the pieces
   - A game state class that handles the game logic
@@ -6,7 +10,6 @@
   - A Minimax class that implements the Minimax algorithm
   - A GUI class that implements the graphical user interface
   - A UI class that implements the command line user interface
-  - A CNN class that implements a convolutional neural network.
   
 ### Getting started
 - Prerequisites:
@@ -46,4 +49,3 @@
 ### Known issues
 - The Minimax algorithm on low depth tends to get stuck in local optimums, resulting in it playing the same move over and over again. For example, it might move the rook back and forth until the end of the game.
 - The HashTable implementation for the Minimax algorithm is not working properly, so it is not used in the current version of the project.
-- The CNN has a limited dataset, therefore it is not as accurate as it could be.

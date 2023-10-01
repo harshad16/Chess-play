@@ -7,12 +7,11 @@ from Chess.Repository.ChessRepository import ChessRepository
 
 
 class UI:
-    def __init__(self, game_state, cnn):
+    def __init__(self, game_state):
         """ Initializes the UI
         :param game_state: The game state to use """
         self.ai = None
         self.state = game_state
-        self.cnn = cnn
 
     def handle_algorithm_selection(self):
         """ Handles the selection of the AI algorithm """
@@ -70,30 +69,23 @@ class UI:
 
     def start(self):
         """ Starts the game """
-        algorithm = self.handle_algorithm_selection()
-        difficulty = self.handle_difficulty_selection()
-        color = self.handle_color_selection()
-        if algorithm == "MCTS":
-            self.ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True, cnn=self.cnn)
-        else:
-            self.ai = Minimax(self.state, difficulty, color)
-
+        difficulty = 2
+        color_one = "w"
+        minimax_ai = Minimax(self.state, difficulty, color_one)
+        color_two = "b"
+        mcts_ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True)
+        
         while not self.state.board.game_over:
-            if self.state.board.turn == color:
-                move = self.ai.select_move(self.state)
+            if self.state.board.turn == color_one:
+                print("Player Minimax playing")
+                move = minimax_ai.select_move(self.state)
                 self.state.make_move(move)
                 self.print_board(self.state.board)
             else:
-                move = input("Your move: ")
-                try:
-                    self.state.make_move(move)
-                    self.print_board(self.state.board)
-                except IllegalMove as e:
-                    print(e)
-                except WrongColor as e:
-                    print(e)
-                except IndexError:
-                    print("Invalid input")
+                print("Player Monte carlo playing")
+                move = mcts_ai.select_move(self.state)
+                self.state.make_move(move)
+                self.print_board(self.state.board)
 
 if __name__ == "__main__":
     game_repository = ChessRepository()
