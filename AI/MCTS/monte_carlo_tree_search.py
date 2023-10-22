@@ -30,7 +30,7 @@ class MCTS:
     algorithm to avoid simulating the same game state multiple times. It also includes alpha-beta pruning to speed up
     the simulations."""
     def __init__(self, state: GameState, iterations: int, exploration_constant: float = math.sqrt(2),
-                 depth_limit: int | None = None, use_opening_book: bool = False):
+                 depth_limit: int | None = None, use_opening_book: bool = False, color: str = "b"):
         """ Initialize the MCTS object
 
         :param state: The initial state of the game
@@ -45,6 +45,7 @@ class MCTS:
         self.current_node = self.root
         self.depth_limit = depth_limit
         self.use_opening_book = use_opening_book
+        self.color = color
 
         # TODO: Create a stronger opening book
         self.opening_book = {
@@ -99,7 +100,7 @@ class MCTS:
             hashtable_result = self.hashtable.lookup(node.state)
             if hashtable_result:
                 value, move = hashtable_result
-                if node.state.board.turn == "w":
+                if node.state.board.turn == self.color:
                     if value >= node.beta:
                         return node
                 else:
@@ -139,7 +140,7 @@ class MCTS:
             hashtable_result = self.hashtable.lookup(state)
             if hashtable_result:
                 value, move = hashtable_result
-                if state.board.turn == "w":
+                if state.board.turn == self.color:
                     if value >= node.beta:
                         return -1
                     node.alpha = max(node.alpha, value)
@@ -176,6 +177,7 @@ class MCTS:
         self.set_current_node(state)
 
         if self.use_opening_book:
+            self.use_opening_book = False
             fen = self.root.state.fen().split(" ")[0]
             if fen in self.opening_book:
                 return self.opening_book[fen]

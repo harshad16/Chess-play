@@ -37,4 +37,4 @@ class MCTSNode:
         if self.visits == 0:
             return float('inf')
         else:
-            return self.wins / self.visits + exploration_constant * math.sqrt(math.log(self.parent.visits) / self.visits)
+            return (self.wins / self.visits) + (exploration_constant * math.sqrt(math.log(self.parent.visits) / self.visits))

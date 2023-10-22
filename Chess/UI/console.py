@@ -73,20 +73,30 @@ class UI:
         color_one = "w"
         minimax_ai = Minimax(self.state, difficulty, color_one)
         color_two = "b"
-        mcts_ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True)
+        mcts_ai = MCTS(self.state, iterations=difficulty, depth_limit=None, use_opening_book=True,color=color_two)
         
         while not self.state.board.game_over:
+            if self.state.board.result:
+                if self.state.board.turn == "w":
+                    print("Minmax wins")
+                else:
+                    print("Monte wins")
+                break
+
             if self.state.board.turn == color_one:
                 print("Player Minimax playing")
                 move = minimax_ai.select_move(self.state)
+                print("Move made by MinMax:",move)
                 self.state.make_move(move)
                 self.print_board(self.state.board)
+                
             else:
                 print("Player Monte carlo playing")
                 move = mcts_ai.select_move(self.state)
+                print("Move made by MCTS: ",move)
                 self.state.make_move(move)
                 self.print_board(self.state.board)
-
+                
 if __name__ == "__main__":
     game_repository = ChessRepository()
     game_repository.initialize_board()
